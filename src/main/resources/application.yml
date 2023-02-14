@@ -2,6 +2,7 @@ discord:
   base-url: discord.com
   base-path: api/v10/
   authentication:
+    interaction-filter-enabled: true
     public:
       app-id: 1065013184060203088
       guild-id: 900864366507868233

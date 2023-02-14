@@ -7,6 +7,9 @@ import org.springframework.util.StreamUtils;
 
 import java.io.*;
 
+/**
+ * Utility class to allow for the body of a HttpServletRequest to be re-read.
+ */
 public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
     private final byte[] cachedBody;
 
@@ -17,12 +20,12 @@ public class CachedBodyHttpServletRequest extends HttpServletRequestWrapper {
     }
 
     @Override
-    public ServletInputStream getInputStream() throws IOException {
+    public ServletInputStream getInputStream() {
         return new CachedBodyServletInputStream(this.cachedBody);
     }
 
     @Override
-    public BufferedReader getReader() throws IOException {
+    public BufferedReader getReader() {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(this.cachedBody);
         return new BufferedReader(new InputStreamReader(byteArrayInputStream));
     }

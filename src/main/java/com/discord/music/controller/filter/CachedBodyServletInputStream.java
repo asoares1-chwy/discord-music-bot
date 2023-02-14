@@ -2,6 +2,8 @@ package com.discord.music.controller.filter;
 
 import jakarta.servlet.ReadListener;
 import jakarta.servlet.ServletInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -10,6 +12,8 @@ import java.io.InputStream;
 public class CachedBodyServletInputStream extends ServletInputStream {
 
     private final InputStream cachedBodyInputStream;
+
+    private static final Logger logger = LoggerFactory.getLogger(CachedBodyServletInputStream.class);
 
     public CachedBodyServletInputStream(byte[] cachedBody) {
         this.cachedBodyInputStream = new ByteArrayInputStream(cachedBody);
@@ -24,8 +28,8 @@ public class CachedBodyServletInputStream extends ServletInputStream {
     public boolean isFinished() {
         try {
             return cachedBodyInputStream.available() == 0;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioe) {
+            logger.error("failed to check availability of input stream.", ioe);
         }
         return false;
     }

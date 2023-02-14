@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HexFormat;
 
+/**
+ * Spring Security filter to verify the signature of the request.
+ */
 public class InteractionFilter extends GenericFilterBean {
     private final String key;
 
@@ -47,10 +50,7 @@ public class InteractionFilter extends GenericFilterBean {
         }
 
         boolean isVerified = Crypto.signVerify(
-                Crypto.signingPublicKey(keyHex),
-                (timestamp + body).getBytes(StandardCharsets.UTF_8),
-                signatureHex
-        );
+                Crypto.signingPublicKey(keyHex), (timestamp + body).getBytes(StandardCharsets.UTF_8), signatureHex);
 
         if (isVerified) {
             chain.doFilter(cachedReq, response);
