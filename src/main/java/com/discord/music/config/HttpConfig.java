@@ -20,9 +20,10 @@ public class HttpConfig {
     public DiscordClient discordClient(
             OkHttpClient httpClient,
             @Value("${discord.base-url}") String baseUrl,
+            @Value("${discord.base-path}") String basePath,
             PublicBotProperties pbp,
             SecretBotProperties sbp,
             ObjectMapper objectMapper) {
-        return new DiscordClient(httpClient, baseUrl, pbp, sbp, objectMapper);
+        return new DiscordClient(httpClient, baseUrl, basePath, pbp, sbp, objectMapper);
     }
 }

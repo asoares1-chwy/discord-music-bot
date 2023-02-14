@@ -12,6 +12,7 @@ import java.io.IOException;
 public class DiscordClient {
     private final OkHttpClient httpClient;
     private final String baseUrl;
+    private final String basePath;
     private final PublicBotProperties publicBotProperties;
     private final SecretBotProperties secretBotProperties;
 
@@ -23,10 +24,12 @@ public class DiscordClient {
 
     public DiscordClient(OkHttpClient httpClient,
                          String baseUrl,
+                         String basePath,
                          PublicBotProperties publicBotProperties,
                          SecretBotProperties secretBotProperties,
                          ObjectMapper objectMapper) {
         this.baseUrl = baseUrl;
+        this.basePath = basePath;
         this.httpClient = httpClient;
         this.publicBotProperties = publicBotProperties;
         this.secretBotProperties = secretBotProperties;
@@ -36,7 +39,14 @@ public class DiscordClient {
     }
 
     public String getCommands() {
-        try (Response body = httpClient.newCall(buildRequest(HttpMethod.GET, null)).execute()) {
+        String path = "applications/" + publicBotProperties.getAppId()
+                + "/guilds/" + publicBotProperties.getGuildId() + "/commands";
+
+        HttpUrl url = baseRequestURI().addPathSegments(path).build();
+
+        Call request = httpClient.newCall(buildRequest(url, HttpMethod.GET, null));
+
+        try (Response body = request.execute()) {
             return body.body().string();
         } catch (IOException ioe) {
             throw new RuntimeException("request cannot be executed", ioe);
@@ -50,7 +60,7 @@ public class DiscordClient {
         );
     }
 
-    private Request buildRequest(HttpMethod method, Object requestBody) {
+    private Request buildRequest(HttpUrl url, HttpMethod method, Object requestBody) {
         RequestBody trueBody;
         if (requestBody == null) {
             trueBody = null;
@@ -66,8 +76,15 @@ public class DiscordClient {
         return new Request.Builder()
                 .headers(this.baseRequestHeaders)
                 .method(method.name(), trueBody)
-                .url(this.baseUrl)
+                .url(url)
                 .build();
+    }
+
+    private HttpUrl.Builder baseRequestURI() {
+        return new HttpUrl.Builder()
+                .scheme("https")
+                .host(this.baseUrl)
+                .addPathSegments(this.basePath);
     }
 
 }

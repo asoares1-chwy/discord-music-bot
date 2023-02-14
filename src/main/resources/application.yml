@@ -1,5 +1,6 @@
 discord:
-  base-url: https://discord.com/api/v10/
+  base-url: discord.com
+  base-path: /api/v10/
   authentication:
     public:
       app-id: 1065013184060203088
