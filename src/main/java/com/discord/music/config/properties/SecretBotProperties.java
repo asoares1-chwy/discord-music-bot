@@ -5,13 +5,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("discord.authentication.secret")
 public class SecretBotProperties {
 
-    public String getBotToken() {
-        return botToken;
+    public String getDiscordToken() {
+        return discordToken;
     }
 
-    public void setBotToken(String botToken) {
-        this.botToken = botToken;
+    public void setDiscordToken(String botToken) {
+        this.discordToken = botToken;
     }
 
-    private String botToken;
+    private String discordToken;
 }

@@ -55,7 +55,7 @@ public class DiscordClient {
 
     private Headers buildHeaders() {
         return Headers.of(
-                "Authorization", "Bot " + secretBotProperties.getBotToken(),
+                "Authorization", "Bot " + secretBotProperties.getDiscordToken(),
                 "Content-Type", "application/json; charset=UTF-8"
         );
     }
