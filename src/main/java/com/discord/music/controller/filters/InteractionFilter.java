@@ -1,4 +1,4 @@
-package com.discord.music.controller.filter;
+package com.discord.music.controller.filters;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

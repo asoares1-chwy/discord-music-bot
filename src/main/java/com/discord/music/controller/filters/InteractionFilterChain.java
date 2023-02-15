@@ -1,6 +1,7 @@
-package com.discord.music.controller.filter;
+package com.discord.music.controller.filters;
 
 import com.discord.music.config.properties.PublicBotProperties;
+import jakarta.servlet.Filter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ public class InteractionFilterChain {
     @Bean
     @ConditionalOnProperty(value = conditionalProperty, havingValue = "true")
     public SecurityFilterChain filterChainInteractions(HttpSecurity http, PublicBotProperties pbp) throws Exception {
-        InteractionFilter filter = new InteractionFilter(pbp.getPublicKey());
+        Filter filter = new InteractionFilter(pbp.getPublicKey());
         http.authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/interactions").permitAll()
                         .requestMatchers("/error").permitAll()
