@@ -10,7 +10,9 @@ import okhttp3.*;
 import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 public class DiscordClient {
     private final OkHttpClient httpClient;
@@ -46,10 +48,16 @@ public class DiscordClient {
                 publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.GET, null);
+        return executeRequest(request);
+    }
+
+    private <T> T executeRequest(Request request) {
         try (Response body = httpClient.newCall(request).execute()) {
-            return objectMapper.readValue(body.body().byteStream(), new TypeReference<>() {});
-        } catch (IOException ioe) {
-            throw new RuntimeException("request cannot be executed", ioe);
+            InputStream bodyStream = Objects.requireNonNull(body.body()).byteStream();
+            return objectMapper.readValue(bodyStream, new TypeReference<>() {
+            });
+        } catch (Exception ex) {
+            throw new RuntimeException("request to Discord API cannot be executed", ex);
         }
     }
 
