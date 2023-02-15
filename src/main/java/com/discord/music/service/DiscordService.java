@@ -15,7 +15,7 @@ public class DiscordService {
     }
 
     public boolean hasGuildCommand(String command) {
-        return this.discordClient.getCommands()
+        return this.discordClient.getGuildCommands()
                 .stream().anyMatch(x -> x.name().equals(command));
     }
 }

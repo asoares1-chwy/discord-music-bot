@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.http.HttpMethod;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
@@ -43,12 +42,20 @@ public class DiscordClient {
         this.baseRequestHeaders = buildHeaders();
     }
 
-    public List<ApplicationCommand> getCommands() {
+    public List<ApplicationCommand> getGuildCommands() {
         String path = String.format("applications/%s/guilds/%s/commands",
                 publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.GET, null);
         return executeRequest(request);
+    }
+
+    public void createGuildCommand(ApplicationCommand command) {
+        String path = String.format("applications/%s/guilds/%s/commands",
+                publicBotProperties.getAppId(), publicBotProperties.getGuildId());
+        HttpUrl url = baseRequestURI().addPathSegments(path).build();
+        Request request = buildRequest(url, HttpMethod.POST, command);
+        executeRequest(request);
     }
 
     private <T> T executeRequest(Request request) {
