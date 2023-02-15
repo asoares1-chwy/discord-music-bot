@@ -2,12 +2,16 @@ package com.discord.music.client;
 
 import com.discord.music.config.properties.PublicBotProperties;
 import com.discord.music.config.properties.SecretBotProperties;
+import com.discord.music.model.ApplicationCommand;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 public class DiscordClient {
     private final OkHttpClient httpClient;
@@ -38,13 +42,13 @@ public class DiscordClient {
         this.baseRequestHeaders = buildHeaders();
     }
 
-    public String getCommands() {
+    public List<ApplicationCommand> getCommands() {
         String path = String.format("applications/%s/guilds/%s/commands",
                 publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.GET, null);
         try (Response body = httpClient.newCall(request).execute()) {
-            return body.body().string();
+            return objectMapper.readValue(body.body().byteStream(), new TypeReference<>() {});
         } catch (IOException ioe) {
             throw new RuntimeException("request cannot be executed", ioe);
         }

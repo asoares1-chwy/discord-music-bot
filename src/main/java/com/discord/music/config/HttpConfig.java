@@ -5,6 +5,7 @@ import com.discord.music.config.properties.PublicBotProperties;
 import com.discord.music.config.properties.SecretBotProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,7 @@ public class HttpConfig {
             @Value("${discord.base-path}") String basePath,
             PublicBotProperties pbp,
             SecretBotProperties sbp,
-            ObjectMapper objectMapper) {
+            @Qualifier("masterObjectMapper") ObjectMapper objectMapper) {
         return new DiscordClient(httpClient, baseUrl, basePath, pbp, sbp, objectMapper);
     }
 }
