@@ -39,14 +39,11 @@ public class DiscordClient {
     }
 
     public String getCommands() {
-        String path = "applications/" + publicBotProperties.getAppId()
-                + "/guilds/" + publicBotProperties.getGuildId() + "/commands";
-
+        String path = String.format("applications/%s/guilds/%s/commands",
+                publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
-
-        Call request = httpClient.newCall(buildRequest(url, HttpMethod.GET, null));
-
-        try (Response body = request.execute()) {
+        Request request = buildRequest(url, HttpMethod.GET, null);
+        try (Response body = httpClient.newCall(request).execute()) {
             return body.body().string();
         } catch (IOException ioe) {
             throw new RuntimeException("request cannot be executed", ioe);
