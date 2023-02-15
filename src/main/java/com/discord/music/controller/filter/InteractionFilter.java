@@ -1,13 +1,16 @@
 package com.discord.music.controller.filter;
 
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.springframework.web.filter.GenericFilterBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.filter.OncePerRequestFilter;
 import software.pando.crypto.nacl.Crypto;
 
 import java.io.IOException;
@@ -17,49 +20,61 @@ import java.util.HexFormat;
 /**
  * Spring Security filter to verify the signature of the request.
  */
-public class InteractionFilter extends GenericFilterBean {
+public class InteractionFilter extends OncePerRequestFilter {
     private final String key;
 
     private final static HexFormat hexFormatter = HexFormat.of();
+    private final static RequestMatcher negationMatcher =
+            new NegatedRequestMatcher(new AntPathRequestMatcher("/interactions", HttpMethod.POST.name()));
+    private final static Logger logger = LoggerFactory.getLogger(InteractionFilter.class);
 
     public InteractionFilter(String key) {
         this.key = key;
     }
 
+    /**
+     * The request validation should only occur
+     * @param request current HTTP request
+     * @return true if the endpoint does NOT match a POST request for interactions, and false otherwise.
+     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        CachedBodyHttpServletRequest cachedReq = new CachedBodyHttpServletRequest((HttpServletRequest) request);
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return negationMatcher.matches(request);
+    }
 
-        String signature = cachedReq.getHeader("X-Signature-Ed25519");
-        String timestamp = cachedReq.getHeader("X-Signature-Timestamp");
-
-        if (signature == null || timestamp == null || key == null) {
-            unauthorized(response);
-            return;
-        }
-
-        String body = IOUtils.toString(cachedReq.getInputStream(), StandardCharsets.UTF_8);
-
-        byte[] keyHex, signatureHex;
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException {
+        CachedBodyHttpServletRequest cachedReq = new CachedBodyHttpServletRequest(request);
         try {
-            keyHex = hexFormatter.parseHex(key);
-            signatureHex = hexFormatter.parseHex(signature);
-        } catch (IllegalArgumentException iae) {
-            unauthorized(response);
-            return;
-        }
-
-        boolean isVerified = Crypto.signVerify(
-                Crypto.signingPublicKey(keyHex), (timestamp + body).getBytes(StandardCharsets.UTF_8), signatureHex);
-
-        if (isVerified) {
-            chain.doFilter(cachedReq, response);
-        } else {
+            if (checkCryptoVerified(cachedReq)) {
+                chain.doFilter(cachedReq, response);
+            } else {
+                unauthorized(response);
+            }
+        } catch (Exception ex) {
+            logger.error("could not authorize due to exception. The status code will remain 401 - Unauthorized.", ex);
             unauthorized(response);
         }
     }
 
-    private static void unauthorized(ServletResponse response) throws IOException {
-        ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    private boolean checkCryptoVerified(HttpServletRequest request) throws IOException {
+        String signature = request.getHeader("X-Signature-Ed25519");
+        String timestamp = request.getHeader("X-Signature-Timestamp");
+
+        if (signature == null || timestamp == null || key == null) {
+            return false;
+        }
+
+        String body = IOUtils.toString(request.getInputStream(), StandardCharsets.UTF_8);
+
+        byte[] keyHex = hexFormatter.parseHex(key);
+        byte[] signatureHex = hexFormatter.parseHex(signature);
+
+        return Crypto.signVerify(
+                Crypto.signingPublicKey(keyHex), (timestamp + body).getBytes(StandardCharsets.UTF_8), signatureHex);
+    }
+
+    private static void unauthorized(HttpServletResponse response) throws IOException {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }

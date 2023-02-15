@@ -9,11 +9,28 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
-@ConditionalOnProperty(prefix = "discord.authentication", name = "interaction-filter-enabled", havingValue = "true")
 public class InteractionFilterChain {
+    private static final String conditionalProperty = "discord.authentication.interaction-filter-enabled";
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, PublicBotProperties pbp) throws Exception {
-        http.addFilterAfter(new InteractionFilter(pbp.getPublicKey()), BasicAuthenticationFilter.class);
+    @ConditionalOnProperty(value = conditionalProperty, havingValue = "true")
+    public SecurityFilterChain filterChainInteractions(HttpSecurity http, PublicBotProperties pbp) throws Exception {
+        InteractionFilter filter = new InteractionFilter(pbp.getPublicKey());
+        http.authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/interactions").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/health").permitAll()
+                        .anyRequest().denyAll()
+                )
+                .csrf().disable()
+                .addFilterBefore(filter, BasicAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = conditionalProperty, havingValue = "false")
+    public SecurityFilterChain filterChainNoInteractions(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()).csrf().disable();
         return http.build();
     }
 }
