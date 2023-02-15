@@ -11,7 +11,6 @@ import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class DiscordClient {
     private final OkHttpClient httpClient;

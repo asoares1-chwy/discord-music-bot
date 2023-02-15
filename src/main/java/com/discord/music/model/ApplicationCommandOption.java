@@ -18,9 +18,13 @@ public record ApplicationCommandOption(
         List<ChannelType> channelTypes,
         List<ApplicationCommandOptionChoice> choices,
         boolean required,
+        @JsonProperty("min_value")
         int minValue,
+        @JsonProperty("max_value")
         int maxValue,
+        @JsonProperty("min_length")
         int minLength,
+        @JsonProperty("max_length")
         int maxLength,
         boolean autocomplete
 ) { }

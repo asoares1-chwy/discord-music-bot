@@ -12,7 +12,7 @@ public record ApplicationCommand(
         boolean defaultPermission,
         @JsonProperty("dm_permission")
         boolean dmPermission,
-        @JsonProperty("dm_member_permissions")
+        @JsonProperty("default_member_permissions")
         String defaultMemberPermissions,
         List<ApplicationCommandOption> options,
         String name,
