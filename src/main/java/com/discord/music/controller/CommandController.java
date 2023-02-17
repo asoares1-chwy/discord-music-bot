@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Controller
+@Controller("/v1/api/")
 public class CommandController {
     private final Logger logger;
 
@@ -22,14 +22,14 @@ public class CommandController {
         this.logger = logger;
     }
 
-    @GetMapping("/health")
+    @GetMapping("health")
     @ResponseStatus(HttpStatus.OK)
     public void health() {
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/interactions")
+    @PostMapping("interactions")
     public DiscordInteractionResponse interactions(@RequestBody DiscordRequest request) {
         if (request.getType() == InteractionType.PING) {
             return new DiscordInteractionResponse(InteractionResponseType.PONG);
