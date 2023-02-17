@@ -1,9 +1,12 @@
 package com.discord.music.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record InteractionRequest(
         String id,
+        @JsonProperty("application_id")
         String applicationId,
         InteractionType type,
         InteractionRequestData data,
@@ -13,7 +16,7 @@ public record InteractionRequest(
         String channelId,
         @JsonProperty("guild_member")
         DiscordGuildMember guildMember,
-        //DiscordUser user,
+        DiscordUser user,
         String token,
         int version,
         DiscordMessage message,
