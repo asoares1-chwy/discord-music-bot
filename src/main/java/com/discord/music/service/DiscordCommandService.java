@@ -17,11 +17,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class DiscordService {
+public class DiscordCommandService {
     private final Logger logger;
     private final DiscordClient discordClient;
 
-    public DiscordService(Logger logger, DiscordClient discordClient) {
+    public DiscordCommandService(Logger logger, DiscordClient discordClient) {
         this.discordClient = discordClient;
         this.logger = logger;
     }

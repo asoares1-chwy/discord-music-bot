@@ -4,7 +4,7 @@ import com.discord.music.model.InteractionRequest;
 import com.discord.music.model.InteractionResponse;
 import com.discord.music.model.InteractionResponseData;
 import com.discord.music.model.InteractionResponseType;
-import com.discord.music.service.DiscordService;
+import com.discord.music.service.DiscordCommandService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class CommandController {
     private final Logger logger;
-    private final DiscordService discordService;
+    private final DiscordCommandService discordService;
 
-    public CommandController(DiscordService discordService, Logger logger) {
+    public CommandController(DiscordCommandService discordService, Logger logger) {
         this.discordService = discordService;
         this.logger = logger;
     }
