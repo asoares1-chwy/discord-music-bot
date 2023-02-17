@@ -50,7 +50,8 @@ public class DiscordClient {
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.GET, null);
 
-        return executeRequest(request, new TypeReference<>() {});
+        return executeRequest(request, new TypeReference<>() {
+        });
     }
 
     public void createGuildCommand(ApplicationCommandRequest command) {
@@ -59,7 +60,8 @@ public class DiscordClient {
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.POST, command);
 
-        executeRequest(request, new TypeReference<Void>() {});
+        executeRequest(request, new TypeReference<Void>() {
+        });
     }
 
     private <T> T executeRequest(Request request, TypeReference<T> jType) {
