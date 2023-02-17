@@ -17,7 +17,7 @@ public record InteractionRequest(
         @JsonProperty("channel_id")
         String channelId,
         @JsonProperty("guild_member")
-        DiscordGuildMember guildMember,
+        GuildMember guildMember,
         DiscordUser user,
         String token,
         int version,

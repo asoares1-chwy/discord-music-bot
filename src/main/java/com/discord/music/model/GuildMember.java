@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-public record DiscordGuildMember(
+public record GuildMember(
         DiscordUser user,
         String nick,
         String avatar,
@@ -18,6 +18,8 @@ public record DiscordGuildMember(
         boolean mute,
         int flags,
         boolean pending,
+        @JsonProperty("is_pending")
+        boolean isPending,
         String permissions,
         @JsonProperty("communication_disabled_until")
         OffsetDateTime communicationDisabledUntil
