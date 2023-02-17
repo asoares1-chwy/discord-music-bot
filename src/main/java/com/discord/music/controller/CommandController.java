@@ -5,11 +5,14 @@ import com.discord.music.model.DiscordRequest;
 import com.discord.music.model.InteractionResponseType;
 import com.discord.music.model.InteractionType;
 import org.slf4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
 public class CommandController {
@@ -20,15 +23,17 @@ public class CommandController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity<Void> health() {
-        return ResponseEntity.ok(null);
+    @ResponseStatus(HttpStatus.OK)
+    public void health() {
     }
 
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/interactions")
-    public ResponseEntity<DiscordInteractionResponse> interactions(@RequestBody DiscordRequest request) {
+    public DiscordInteractionResponse interactions(@RequestBody DiscordRequest request) {
         if (request.getType() == InteractionType.PING) {
-            return ResponseEntity.ok(new DiscordInteractionResponse(InteractionResponseType.PONG));
+            return new DiscordInteractionResponse(InteractionResponseType.PONG);
         }
-        return ResponseEntity.badRequest().body(new DiscordInteractionResponse(InteractionResponseType.UPDATE_MESSAGE));
+        return new DiscordInteractionResponse(InteractionResponseType.UPDATE_MESSAGE);
     }
 }
