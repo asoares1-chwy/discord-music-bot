@@ -19,12 +19,23 @@ public record ApplicationCommandOption(
         List<ApplicationCommandOptionChoice> choices,
         boolean required,
         @JsonProperty("min_value")
-        int minValue,
+        Integer minValue,
         @JsonProperty("max_value")
-        int maxValue,
+        Integer maxValue,
         @JsonProperty("min_length")
-        int minLength,
+        Integer minLength,
         @JsonProperty("max_length")
-        int maxLength,
+        Integer maxLength,
         boolean autocomplete
-) { }
+) {
+        public ApplicationCommandOption(
+                ApplicationCommandOptionType type,
+                String name,
+                String description,
+                boolean required,
+                List<ApplicationCommandOptionChoice> choices
+        ) {
+                this(type, name, Map.of(), description, Map.of(), List.of(), List.of(), choices, required,
+                        null, null, null, null, false);
+        }
+}

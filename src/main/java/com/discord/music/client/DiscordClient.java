@@ -3,6 +3,7 @@ package com.discord.music.client;
 import com.discord.music.config.properties.PublicBotProperties;
 import com.discord.music.config.properties.SecretBotProperties;
 import com.discord.music.model.ApplicationCommand;
+import com.discord.music.model.ApplicationCommandRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +51,7 @@ public class DiscordClient {
         return executeRequest(request);
     }
 
-    public void createGuildCommand(ApplicationCommand command) {
+    public void createGuildCommand(ApplicationCommandRequest command) {
         String path = String.format("applications/%s/guilds/%s/commands",
                 publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
