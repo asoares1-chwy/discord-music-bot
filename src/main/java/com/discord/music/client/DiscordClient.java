@@ -50,8 +50,7 @@ public class DiscordClient {
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.GET, null);
 
-        return executeRequest(request, objectMapper.getTypeFactory()
-                .constructCollectionType(List.class, ApplicationCommand.class));
+        return executeRequest(request, new TypeReference<>() {});
     }
 
     public void createGuildCommand(ApplicationCommandRequest command) {
@@ -60,16 +59,15 @@ public class DiscordClient {
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.POST, command);
 
-        executeRequest(request, objectMapper.constructType(Void.TYPE));
+        executeRequest(request, new TypeReference<Void>() {});
     }
 
-    private <T> T executeRequest(Request request, JavaType jType) {
+    private <T> T executeRequest(Request request, TypeReference<T> jType) {
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
                 throw new DiscordClientException(request.method(), request.url(), response.code(), response.message());
             }
-            Class<?> rawClass = jType.getRawClass();
-            if (rawClass.isAssignableFrom(Void.TYPE)) {
+            if (jType.getType().getTypeName().equals("void")) {
                 return null;
             }
             InputStream bodyStream = Objects.requireNonNull(response.body()).byteStream();

@@ -32,7 +32,7 @@ public class DiscordService {
         for (MusicBotCommand command : commands) {
             ApplicationCommandRequest request = command.getApplicationCommandRequest();
             if (!commandNames.contains(request.name())) {
-                logger.info("missing command with name {}. command will be installed.", request.name());
+                logger.info("missing command with name <{}>. command will be installed.", request.name());
                 discordClient.createGuildCommand(request);
             } else {
                 logger.debug("command {} is already installed on guild server.", request.name());
