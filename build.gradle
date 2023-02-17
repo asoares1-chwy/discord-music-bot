@@ -20,6 +20,7 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
 
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
     implementation group: 'com.github.alexdlaird', name: 'java-ngrok', version: '1.6.1'
