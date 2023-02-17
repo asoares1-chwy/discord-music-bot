@@ -6,6 +6,7 @@ import com.discord.music.model.ApplicationCommand;
 import com.discord.music.model.ApplicationCommandRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.springframework.http.HttpMethod;
@@ -48,7 +49,9 @@ public class DiscordClient {
                 publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.GET, null);
-        return executeRequest(request);
+
+        return executeRequest(request, objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, ApplicationCommand.class));
     }
 
     public void createGuildCommand(ApplicationCommandRequest command) {
@@ -56,14 +59,21 @@ public class DiscordClient {
                 publicBotProperties.getAppId(), publicBotProperties.getGuildId());
         HttpUrl url = baseRequestURI().addPathSegments(path).build();
         Request request = buildRequest(url, HttpMethod.POST, command);
-        executeRequest(request);
+
+        executeRequest(request, objectMapper.constructType(Void.TYPE));
     }
 
-    private <T> T executeRequest(Request request) {
-        try (Response body = httpClient.newCall(request).execute()) {
-            InputStream bodyStream = Objects.requireNonNull(body.body()).byteStream();
-            return objectMapper.readValue(bodyStream, new TypeReference<>() {
-            });
+    private <T> T executeRequest(Request request, JavaType jType) {
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new DiscordClientException(request.method(), request.url(), response.code(), response.message());
+            }
+            Class<?> rawClass = jType.getRawClass();
+            if (rawClass.isAssignableFrom(Void.TYPE)) {
+                return null;
+            }
+            InputStream bodyStream = Objects.requireNonNull(response.body()).byteStream();
+            return objectMapper.readValue(bodyStream, jType);
         } catch (Exception ex) {
             throw new RuntimeException("request to Discord API cannot be executed", ex);
         }
