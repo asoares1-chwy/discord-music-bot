@@ -3,6 +3,8 @@ package com.discord.music.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record InteractionRequest(
         String id,
@@ -24,6 +26,8 @@ public record InteractionRequest(
         String appPermissions,
         String locale,
         @JsonProperty("guild_locale")
-        String guildLocale
+        String guildLocale,
+        @JsonProperty("entitlement_sku_ids")
+        List<String> entitlementSkuIds
 ) {
 }

@@ -48,7 +48,7 @@ public class DiscordService {
         MusicBotCommand command = MusicBotCommand.fromCommandName(request.data().name());
         return switch (command) {
             case PLAY -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    new InteractionResponseData("added song to queue"));
+                    new InteractionResponseData("added " + request.data().options().get(0).value() + " to queue"));
             case SKIP -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
                     new InteractionResponseData("skipping song"));
             case PAUSE -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,

@@ -8,6 +8,7 @@ import java.util.Map;
 public record ApplicationCommandOption(
         ApplicationCommandOptionType type,
         String name,
+        String value,
         @JsonProperty("name_localizations")
         Map<String, String> nameLocalizations,
         String description,
@@ -35,7 +36,7 @@ public record ApplicationCommandOption(
                 boolean required,
                 List<ApplicationCommandOptionChoice> choices
         ) {
-                this(type, name, Map.of(), description, Map.of(), List.of(), List.of(), choices, required,
+                this(type, name, null, Map.of(), description, Map.of(), List.of(), List.of(), choices, required,
                         null, null, null, null, false);
         }
 }
