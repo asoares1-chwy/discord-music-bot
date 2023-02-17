@@ -1,7 +1,8 @@
 package com.discord.music.controller;
 
-import com.discord.music.model.DiscordInteractionResponse;
+import com.discord.music.model.InteractionResponse;
 import com.discord.music.model.InteractionRequest;
+import com.discord.music.model.InteractionResponseData;
 import com.discord.music.model.InteractionResponseType;
 import com.discord.music.model.InteractionType;
 import org.slf4j.Logger;
@@ -29,10 +30,11 @@ public class CommandController {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/interactions")
-    public DiscordInteractionResponse interactions(@RequestBody InteractionRequest request) {
+    public InteractionResponse interactions(@RequestBody InteractionRequest request) {
         if (request.type() == InteractionType.PING) {
-            return new DiscordInteractionResponse(InteractionResponseType.PONG);
+            return new InteractionResponse(InteractionResponseType.PONG);
         }
-        return new DiscordInteractionResponse(InteractionResponseType.UPDATE_MESSAGE);
+        return new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                new InteractionResponseData("hey there"));
     }
 }
