@@ -3,6 +3,10 @@ package com.discord.music.service;
 import com.discord.music.client.DiscordClient;
 import com.discord.music.model.ApplicationCommand;
 import com.discord.music.model.ApplicationCommandRequest;
+import com.discord.music.model.InteractionRequest;
+import com.discord.music.model.InteractionResponse;
+import com.discord.music.model.InteractionResponseData;
+import com.discord.music.model.InteractionResponseType;
 import com.discord.music.model.MusicBotCommand;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -38,5 +42,21 @@ public class DiscordService {
                 logger.debug("command {} is already installed on guild server.", request.name());
             }
         }
+    }
+
+    public InteractionResponse handleInteractionCommand(InteractionRequest request) {
+        MusicBotCommand command = MusicBotCommand.fromCommandName(request.data().name());
+        return switch (command) {
+            case PLAY -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    new InteractionResponseData("added song to queue"));
+            case SKIP -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    new InteractionResponseData("skipping song"));
+            case PAUSE -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    new InteractionResponseData("pausing song"));
+            case RESUME -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    new InteractionResponseData("resuming song"));
+            case CLEAR_QUEUE -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                    new InteractionResponseData("clearing queue"));
+        };
     }
 }
