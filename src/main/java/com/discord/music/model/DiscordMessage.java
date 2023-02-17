@@ -1,4 +1,4 @@
 package com.discord.music.model;
 
-public class DiscordMessage {
+public record DiscordMessage() {
 }
