@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class YouTubeDownloadService {
-    private Logger logger;
+    private final Logger logger;
     private final ProcessBuilder processBuilder;
 
     public YouTubeDownloadService(ProcessBuilder builder, Logger logger) {
