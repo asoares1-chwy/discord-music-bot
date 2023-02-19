@@ -10,6 +10,7 @@ sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -27,6 +28,9 @@ dependencies {
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
     implementation group: 'com.github.alexdlaird', name: 'java-ngrok', version: '1.6.1'
     implementation group: 'software.pando.crypto', name: 'salty-coffee', version: '1.1.1'
+
+    /* Audio Libraries */
+
 }
 
 tasks.named('test') {
