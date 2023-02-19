@@ -38,10 +38,12 @@ public class YouTubeDownloadService {
         BufferedReader errIn = new BufferedReader(new InputStreamReader(error));
         String rLine, eLine;
         while ((rLine = regIn.readLine()) != null) {
-            logger.info(rLine);
+            logger.info("<script output>: {}", rLine);
         }
         while ((eLine = errIn.readLine()) != null) {
-            logger.error(eLine);
+            logger.error("<script error>: {}", eLine);
         }
+        regular.close();
+        error.close();
     }
 }
