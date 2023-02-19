@@ -43,7 +43,5 @@ public class YouTubeDownloadService {
         while ((eLine = errIn.readLine()) != null) {
             logger.error("<script error>: {}", eLine);
         }
-        regular.close();
-        error.close();
     }
 }
