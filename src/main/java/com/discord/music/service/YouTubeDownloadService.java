@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class YouTubeDownloadService {
     private final Logger logger;
 
+    private static final long timeoutSeconds = 10;
     private static final String command = "python3";
     private static final Resource downloadScript = new ClassPathResource("scripts/download_youtube_video.py");
 
@@ -27,7 +28,7 @@ public class YouTubeDownloadService {
             Process process = new ProcessBuilder(command, downloadScript.getFile().getAbsolutePath(), url)
                     .start();
             logProgramOutput(process.getInputStream(), process.getErrorStream());
-            process.waitFor(10, TimeUnit.SECONDS);
+            process.waitFor(timeoutSeconds, TimeUnit.SECONDS);
             logger.info("completed download of video {}", url);
         } catch (IOException e) {
             throw new RuntimeException("could not install video", e);
