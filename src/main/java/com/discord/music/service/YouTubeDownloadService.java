@@ -1,6 +1,8 @@
 package com.discord.music.service;
 
 import org.slf4j.Logger;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -12,19 +14,20 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class YouTubeDownloadService {
     private final Logger logger;
-    private final ProcessBuilder processBuilder;
 
-    public YouTubeDownloadService(ProcessBuilder builder, Logger logger) {
+    private static final String command = "python3";
+    private static final Resource downloadScript = new ClassPathResource("scripts/download_youtube_video.py");
+
+    public YouTubeDownloadService(Logger logger) {
         this.logger = logger;
-        this.processBuilder = builder;
     }
 
     public void downloadYouTubeVideo(String url) {
         try {
-            Process process = processBuilder.start();
+            Process process = new ProcessBuilder(command, downloadScript.getFile().getAbsolutePath(), url)
+                    .start();
             logProgramOutput(process.getInputStream(), process.getErrorStream());
             process.waitFor(10, TimeUnit.SECONDS);
-
             logger.info("completed download of video {}", url);
         } catch (IOException e) {
             throw new RuntimeException("could not install video", e);
