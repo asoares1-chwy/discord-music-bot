@@ -21,7 +21,7 @@ public interface ISongQueue {
     /**
      * Removes the song at the head of the queue. An event is published to inform the player.
      */
-    void skipSong();
+    boolean skipSong();
 
     /**
      * Removes all elements from the queue. An event is published to inform the player.

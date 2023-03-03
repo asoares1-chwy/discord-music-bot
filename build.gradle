@@ -22,15 +22,15 @@ dependencies {
 
     /* Java Common Libraries */
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.0.2'
 
     /* Application Specific Libraries */
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
+    implementation group: 'com.discord4j', name: 'discord4j-core', version: '3.2.3'
     implementation group: 'com.github.alexdlaird', name: 'java-ngrok', version: '1.6.1'
     implementation group: 'software.pando.crypto', name: 'salty-coffee', version: '1.1.1'
+    implementation group: "io.netty", name: "netty-resolver-dns-native-macos", version: "4.1.70.Final", classifier: "osx-aarch_64"
 
     /* Audio Libraries */
-
 }
 
 tasks.named('test') {

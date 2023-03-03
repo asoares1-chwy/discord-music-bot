@@ -45,13 +45,14 @@ public class SongQueue implements ApplicationListener<SongEvent>, ISongQueue {
     }
 
     @Override
-    public void skipSong() {
+    public boolean skipSong() {
         if (this.queue.isEmpty()) {
-            return;
+            return false;
         }
         this.queue.pollFirst();
         SongEvent songSkippedEvent = new SongEvent(this, SongEventType.SONG_SKIPPED);
         this.publisher.publishEvent(songSkippedEvent);
+        return true;
     }
 
     @Override
