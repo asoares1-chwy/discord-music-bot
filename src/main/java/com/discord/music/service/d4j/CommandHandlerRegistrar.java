@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CmdService implements ApplicationListener<ApplicationReadyEvent> {
+public class CommandHandlerRegistrar implements ApplicationListener<ApplicationReadyEvent> {
     private final Logger logger;
 
     private final GatewayDiscordClient client;
@@ -27,14 +27,14 @@ public class CmdService implements ApplicationListener<ApplicationReadyEvent> {
     private final ViewQueueContentsCommand viewQueueContentsCommand;
     private final QueueClearCommand queueClearCommand;
 
-    public CmdService(GatewayDiscordClient client,
-                      Logger logger,
-                      PlayCommand playCommand,
-                      SkipCommand skipCommand,
-                      PauseCommand pauseCommand,
-                      ResumeCommand resumeCommand,
-                      QueueClearCommand queueClearCommand,
-                      ViewQueueContentsCommand viewQueueContentsCommand) {
+    public CommandHandlerRegistrar(GatewayDiscordClient client,
+                                   Logger logger,
+                                   PlayCommand playCommand,
+                                   SkipCommand skipCommand,
+                                   PauseCommand pauseCommand,
+                                   ResumeCommand resumeCommand,
+                                   QueueClearCommand queueClearCommand,
+                                   ViewQueueContentsCommand viewQueueContentsCommand) {
         this.client = client;
         this.logger = logger;
         this.playCommand = playCommand;
@@ -45,8 +45,7 @@ public class CmdService implements ApplicationListener<ApplicationReadyEvent> {
         this.viewQueueContentsCommand = viewQueueContentsCommand;
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+    private void registerCommandHandlers() {
         logger.info("application startup completed, establishing discord command handlers.");
         client.getEventDispatcher().on(ChatInputInteractionEvent.class, event -> {
             logger.info("responding to command {}", event.getCommandName());
@@ -62,5 +61,10 @@ public class CmdService implements ApplicationListener<ApplicationReadyEvent> {
             return cmd.executeOnCommand(event);
         }).subscribe();
         logger.info("command handlers registered.");
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        registerCommandHandlers();
     }
 }
