@@ -7,6 +7,7 @@ import com.discord.music.component.handlers.QueueClearCommand;
 import com.discord.music.component.handlers.ResumeCommand;
 import com.discord.music.component.handlers.SkipCommand;
 import com.discord.music.component.handlers.ViewQueueContentsCommand;
+import com.discord.music.model.MusicBotCommand;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.slf4j.Logger;
@@ -50,14 +51,17 @@ public class CommandHandlerRegistrar implements ApplicationListener<ApplicationR
         logger.info("application startup completed, establishing discord command handlers.");
         client.getEventDispatcher().on(ChatInputInteractionEvent.class, event -> {
             logger.info("responding to command {}", event.getCommandName());
-            CommandHandler<ChatInputInteractionEvent> cmd = switch (event.getCommandName()) {
-                case "play" -> playCommand;
-                case "skip" -> skipCommand;
-                case "clear" -> queueClearCommand;
-                case "pause" -> pauseCommand;
-                case "resume" -> resumeCommand;
-                case "queue" -> viewQueueContentsCommand;
-                default -> (e) -> Mono.empty();
+            MusicBotCommand command = MusicBotCommand.fromLiteralCommand(event.getCommandName());
+            if (command == null) {
+                return Mono.empty();
+            }
+            CommandHandler<ChatInputInteractionEvent> cmd = switch (command) {
+                case PLAY -> playCommand;
+                case SKIP -> skipCommand;
+                case CLEAR -> queueClearCommand;
+                case PAUSE -> pauseCommand;
+                case RESUME -> resumeCommand;
+                case VIEW_QUEUE -> viewQueueContentsCommand;
             };
             return cmd.executeOnCommand(event);
         }).subscribe();
