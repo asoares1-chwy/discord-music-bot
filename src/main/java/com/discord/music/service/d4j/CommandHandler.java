@@ -5,6 +5,11 @@ import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * Lambda compatible interface to process a Discord interaction.
+ *
+ * @param <T> Any subtype of a Discord4J Event.
+ */
 public interface CommandHandler<T extends Event> {
     /**
      * Defines a course of action for a specific Discord command.
