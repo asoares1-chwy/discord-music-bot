@@ -1,6 +1,7 @@
 package com.discord.music.service;
 
 import com.discord.music.client.DiscordClient;
+import com.discord.music.component.SongQueue;
 import com.discord.music.model.ApplicationCommand;
 import com.discord.music.model.ApplicationCommandRequest;
 import com.discord.music.model.InteractionRequest;
@@ -8,6 +9,8 @@ import com.discord.music.model.InteractionResponse;
 import com.discord.music.model.InteractionResponseData;
 import com.discord.music.model.InteractionResponseType;
 import com.discord.music.model.MusicBotCommand;
+import com.discord.music.model.YouTubeURI;
+import com.discord.music.model.queue.ISongQueue;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class DiscordCommandService {
     private final Logger logger;
+    private final ISongQueue masterSongQueue;
     private final DiscordClient discordClient;
 
-    public DiscordCommandService(Logger logger, DiscordClient discordClient) {
+    public DiscordCommandService(Logger logger, DiscordClient discordClient, SongQueue songQueue) {
         this.discordClient = discordClient;
+        this.masterSongQueue = songQueue;
         this.logger = logger;
     }
 
@@ -47,16 +52,37 @@ public class DiscordCommandService {
     public InteractionResponse handleInteractionCommand(InteractionRequest request) {
         MusicBotCommand command = MusicBotCommand.fromCommandName(request.data().name());
         return switch (command) {
-            case PLAY -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    new InteractionResponseData("added " + request.data().options().get(0).value() + " to queue"));
-            case SKIP -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    new InteractionResponseData("skipping song"));
-            case PAUSE -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    new InteractionResponseData("pausing song"));
-            case RESUME -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    new InteractionResponseData("resuming song"));
-            case CLEAR_QUEUE -> new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-                    new InteractionResponseData("clearing queue"));
+            case PLAY -> {
+                YouTubeURI ytUri = YouTubeURI.fromUriString(request.data().options().get(0).value());
+                this.masterSongQueue.addSong(ytUri);
+                yield new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                        new InteractionResponseData("successfully queued " + ytUri.getUri()));
+            }
+            case SKIP -> {
+                this.masterSongQueue.skipSong();
+                yield new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                        new InteractionResponseData("skipping current song..."));
+            }
+            case CLEAR_QUEUE -> {
+                this.masterSongQueue.clearQueue();
+                yield new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                        new InteractionResponseData("clearing queue..."));
+            }
+            case PAUSE -> pauseSong();
+            case RESUME -> resumeSong();
         };
     }
+
+    private InteractionResponse pauseSong() {
+        // TODO music player should stop, although song remains in queue.
+        return new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                new InteractionResponseData("pausing song"));
+    }
+
+    private InteractionResponse resumeSong() {
+        // TODO music player should continue, although song remains in queue.
+        return new InteractionResponse(InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
+                new InteractionResponseData("resuming song"));
+    }
+
 }

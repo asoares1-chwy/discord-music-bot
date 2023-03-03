@@ -22,6 +22,6 @@ public class ApplicationStartupInitializer implements ApplicationListener<Applic
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         downloadService.downloadYouTubeVideo("https://www.youtube.com/watch?v=AA-S8CGoFug");
-        //discordService.verifyGuildCommands(Arrays.asList(MusicBotCommand.values()));
+        discordService.verifyGuildCommands(Arrays.asList(MusicBotCommand.values()));
     }
 }
