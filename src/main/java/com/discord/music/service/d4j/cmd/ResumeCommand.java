@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class UnknownCommand implements CommandHandler<ChatInputInteractionEvent> {
+public class ResumeCommand implements CommandHandler<ChatInputInteractionEvent> {
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        return event.reply();
+        return null;
     }
 }

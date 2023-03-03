@@ -26,5 +26,5 @@ public interface ISongQueue {
     /**
      * Removes all elements from the queue. An event is published to inform the player.
      */
-    void clearQueue();
+    boolean clearQueue();
 }

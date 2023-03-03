@@ -8,18 +8,18 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class SkipCommand implements CommandHandler<ChatInputInteractionEvent> {
+public class QueueClearCommand implements CommandHandler<ChatInputInteractionEvent> {
     private final ISongQueue songQueue;
 
-    public SkipCommand(SongQueue songQueue) {
+    public QueueClearCommand(SongQueue songQueue) {
         this.songQueue = songQueue;
     }
 
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        if (songQueue.skipSong()) {
-            return event.reply("Skipping currently playing song.");
+        if (songQueue.clearQueue()) {
+            return event.reply("Queue has been cleared.");
         }
-        return event.reply("Queue is empty, nothing to skip.");
+        return event.reply("Queue is empty, nothing to clear.");
     }
 }

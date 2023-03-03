@@ -56,13 +56,14 @@ public class SongQueue implements ApplicationListener<SongEvent>, ISongQueue {
     }
 
     @Override
-    public void clearQueue() {
+    public boolean clearQueue() {
         if (this.queue.isEmpty()) {
-            return;
+            return false;
         }
         this.queue.clear();
         SongEvent queueClearedEvent = new SongEvent(this, SongEventType.QUEUE_CLEARED);
         this.publisher.publishEvent(queueClearedEvent);
+        return true;
     }
 
 }
