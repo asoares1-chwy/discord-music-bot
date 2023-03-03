@@ -6,5 +6,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface CommandHandler<T extends Event> {
+    /**
+     * Defines a course of action for a specific Discord command.
+     *
+     * @param event The captured Discord4J Event to process
+     * @return a publisher which will reply to the event.
+     */
     Mono<Void> executeOnCommand(T event);
 }
