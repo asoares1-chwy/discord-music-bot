@@ -1,4 +1,4 @@
-package com.discord.music.service.d4j;
+package com.discord.music.model;
 
 import discord4j.core.event.domain.Event;
 import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;

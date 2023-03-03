@@ -1,9 +1,9 @@
-package com.discord.music.service.d4j.cmd;
+package com.discord.music.component.handlers;
 
 import com.discord.music.component.SongQueue;
 import com.discord.music.model.YouTubeURI;
 import com.discord.music.model.queue.ISongQueue;
-import com.discord.music.service.d4j.CommandHandler;
+import com.discord.music.model.CommandHandler;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;

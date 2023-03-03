@@ -1,25 +1,25 @@
-package com.discord.music.service.d4j.cmd;
+package com.discord.music.component.handlers;
 
 import com.discord.music.component.SongQueue;
 import com.discord.music.model.queue.ISongQueue;
-import com.discord.music.service.d4j.CommandHandler;
+import com.discord.music.model.CommandHandler;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class QueueClearCommand implements CommandHandler<ChatInputInteractionEvent> {
+public class SkipCommand implements CommandHandler<ChatInputInteractionEvent> {
     private final ISongQueue songQueue;
 
-    public QueueClearCommand(SongQueue songQueue) {
+    public SkipCommand(SongQueue songQueue) {
         this.songQueue = songQueue;
     }
 
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        if (songQueue.clearQueue()) {
-            return event.reply("Queue has been cleared.");
+        if (songQueue.skipSong()) {
+            return event.reply("Skipping currently playing song.");
         }
-        return event.reply("Queue is empty, nothing to clear.");
+        return event.reply("Queue is empty, nothing to skip.");
     }
 }

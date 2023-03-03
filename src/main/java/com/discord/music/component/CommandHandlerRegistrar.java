@@ -1,11 +1,12 @@
-package com.discord.music.service.d4j;
+package com.discord.music.component;
 
-import com.discord.music.service.d4j.cmd.PauseCommand;
-import com.discord.music.service.d4j.cmd.PlayCommand;
-import com.discord.music.service.d4j.cmd.QueueClearCommand;
-import com.discord.music.service.d4j.cmd.ResumeCommand;
-import com.discord.music.service.d4j.cmd.SkipCommand;
-import com.discord.music.service.d4j.cmd.ViewQueueContentsCommand;
+import com.discord.music.model.CommandHandler;
+import com.discord.music.component.handlers.PauseCommand;
+import com.discord.music.component.handlers.PlayCommand;
+import com.discord.music.component.handlers.QueueClearCommand;
+import com.discord.music.component.handlers.ResumeCommand;
+import com.discord.music.component.handlers.SkipCommand;
+import com.discord.music.component.handlers.ViewQueueContentsCommand;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.slf4j.Logger;
