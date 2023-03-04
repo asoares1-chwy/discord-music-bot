@@ -1,6 +1,5 @@
 package com.discord.music.service;
 
-import com.austinv11.servicer.Service;
 import com.discord.music.component.audio.YouTubeAudioProvider;
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -10,6 +9,7 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.core.spec.VoiceChannelJoinSpec;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
