@@ -6,12 +6,14 @@ import com.discord.music.component.audio.YouTubeAudioResultHandler;
 import com.discord.music.model.YouTubeURI;
 import com.discord.music.model.queue.ISongQueue;
 import com.discord.music.model.CommandHandler;
+import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.VoiceState;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.core.spec.VoiceChannelJoinSpec;
@@ -27,27 +29,28 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
     private final ISongQueue songQueue;
-    private final GatewayDiscordClient discordClient;
     private final AudioPlayerManager audioPlayerManager;
-    private final YouTubeAudioProvider youTubeAudioProvider;
     private final YouTubeAudioResultHandler youTubeAudioResultHandler;
+    private final VoiceChannelService voiceChannelService;
 
     public PlayCommand(SongQueue songQueue,
                        AudioPlayerManager audioPlayerManager,
-                       GatewayDiscordClient discordClient,
-                       YouTubeAudioResultHandler youTubeAudioResultHandler,
-                       YouTubeAudioProvider youTubeAudioProvider) {
+                       VoiceChannelService voiceChannelService,
+                       YouTubeAudioResultHandler youTubeAudioResultHandler) {
         this.songQueue = songQueue;
-        this.discordClient = discordClient;
         this.audioPlayerManager = audioPlayerManager;
-        this.youTubeAudioProvider = youTubeAudioProvider;
+        this.voiceChannelService = voiceChannelService;
         this.youTubeAudioResultHandler = youTubeAudioResultHandler;
     }
 
     @Override
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        joinVoiceChannel(event.getInteraction().getMember().get());
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        Guild guild = event.getInteraction().getGuild().block();
+        Member member = event.getInteraction().getMember().get();
+        if (!voiceChannelService.botInMemberChannel(guild, member)) {
+            voiceChannelService.joinVoiceChannel(member);
+        }
         String uri = event.getOption("song_url")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
@@ -61,33 +64,5 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
         songQueue.addSong(youTubeURI);
         audioPlayerManager.loadItem(youTubeURI.getUri(), youTubeAudioResultHandler);
         return event.reply("Successfully added " + youTubeURI.getUri() + " to the queue.");
-    }
-
-    private boolean hasJoinedServer() {
-//        this.discordClient.
-        return false;
-    }
-
-    private void joinVoiceChannel(Member member) {
-        if (member == null) {
-            return;
-        }
-        VoiceState voiceState = member.getVoiceState().block();
-        if (voiceState == null) {
-            return;
-        }
-        VoiceChannel channel = voiceState.getChannel().block();
-        if (channel == null) {
-            return;
-        }
-        VoiceChannelJoinSpec spec = VoiceChannelJoinSpec.builder()
-                .provider(youTubeAudioProvider)
-                //.timeout(Duration.ofMinutes(1))
-                .build();
-        channel.join(spec).block();
-    }
-
-    private void playTrack() {
-
     }
 }
