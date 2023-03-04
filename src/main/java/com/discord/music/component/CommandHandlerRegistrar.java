@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 @Component
-public class CommandHandlerRegistrar implements ApplicationListener<ApplicationReadyEvent> {
+public class CommandHandlerRegistrar {
     private final Logger logger;
 
     private final GatewayDiscordClient client;
@@ -47,7 +47,11 @@ public class CommandHandlerRegistrar implements ApplicationListener<ApplicationR
         this.viewQueueContentsCommand = viewQueueContentsCommand;
     }
 
-    private void registerCommandHandlers() {
+    /**
+     * Assigns a handler to each individual command.
+     * Each handler will be invoked only when user submits that specific command.
+     */
+    public void registerCommandHandlers() {
         logger.info("application startup completed, establishing discord command handlers.");
         client.getEventDispatcher().on(ChatInputInteractionEvent.class, event -> {
             logger.info("responding to command {}", event.getCommandName());
@@ -65,11 +69,5 @@ public class CommandHandlerRegistrar implements ApplicationListener<ApplicationR
             };
             return cmd.executeOnCommand(event);
         }).subscribe();
-        logger.info("command handlers registered.");
-    }
-
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        registerCommandHandlers();
     }
 }

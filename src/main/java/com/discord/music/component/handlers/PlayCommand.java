@@ -46,40 +46,33 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
 
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        final Member member = event.getInteraction().getMember().orElse(null);
-        if (member != null) {
-            final VoiceState voiceState = member.getVoiceState().block();
-            if (voiceState != null) {
-                final VoiceChannel channel = voiceState.getChannel().block();
-                if (channel != null) {
-                    // join returns a VoiceConnection which would be required if we were
-                    // adding disconnection features, but for now we are just ignoring it.
-                    channel.join(spec -> spec.setProvider(youTubeAudioProvider)).block();
-                }
-            }
+        joinVoiceChannel(event.getInteraction().getMember().get());
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        String uri = event.getOption("song_url")
+                .flatMap(ApplicationCommandInteractionOption::getValue)
+                .map(ApplicationCommandInteractionOptionValue::asString)
+                .get();
+        YouTubeURI youTubeURI;
+        try {
+            youTubeURI = YouTubeURI.fromUriString(uri);
+        } catch (IllegalArgumentException iae) {
+            return event.reply("Link is not recognized as a valid YouTube url.");
         }
-//        @SuppressWarnings("OptionalGetWithoutIsPresent")
-//        String uri = event.getOption("song_url")
-//                .flatMap(ApplicationCommandInteractionOption::getValue)
-//                .map(ApplicationCommandInteractionOptionValue::asString)
-//                .get();
-//        YouTubeURI youTubeURI;
-//        try {
-//            youTubeURI = YouTubeURI.fromUriString(uri);
-//        } catch (IllegalArgumentException iae) {
-//            return event.reply("Link is not recognized as a valid YouTube url.");
-//        }
-//        songQueue.addSong(youTubeURI);
-//        audioPlayerManager.loadItem(youTubeURI.getUri(), youTubeAudioResultHandler);
-//        return event.reply("Successfully added " + youTubeURI.getUri() + " to the queue.");
-        return event.reply("hello");
+        songQueue.addSong(youTubeURI);
+        audioPlayerManager.loadItem(youTubeURI.getUri(), youTubeAudioResultHandler);
+        return event.reply("Successfully added " + youTubeURI.getUri() + " to the queue.");
     }
 
-    private void joinVoiceChannel(Optional<Member> member) {
-        if (member.isEmpty()) {
+    private boolean hasJoinedServer() {
+//        this.discordClient.
+        return false;
+    }
+
+    private void joinVoiceChannel(Member member) {
+        if (member == null) {
             return;
         }
-        VoiceState voiceState = member.get().getVoiceState().block();
+        VoiceState voiceState = member.getVoiceState().block();
         if (voiceState == null) {
             return;
         }

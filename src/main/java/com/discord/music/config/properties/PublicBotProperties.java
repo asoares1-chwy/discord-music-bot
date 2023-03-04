@@ -5,19 +5,19 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("discord.authentication.public")
 public class PublicBotProperties {
 
-    public String getAppId() {
+    public Long getAppId() {
         return appId;
     }
 
-    public void setAppId(String appId) {
+    public void setAppId(Long appId) {
         this.appId = appId;
     }
 
-    public String getGuildId() {
+    public Long getGuildId() {
         return guildId;
     }
 
-    public void setGuildId(String guildId) {
+    public void setGuildId(Long guildId) {
         this.guildId = guildId;
     }
 
@@ -29,7 +29,7 @@ public class PublicBotProperties {
         this.publicKey = publicKey;
     }
 
-    private String appId;
-    private String guildId;
+    private Long appId;
+    private Long guildId;
     private String publicKey;
 }
