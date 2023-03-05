@@ -33,6 +33,9 @@ public class VoiceChannelService {
      * @return true if the bot is currently joined to the member's channel, and false otherwise.
      */
     public boolean botInMemberChannel(Guild guild, Member member) {
+        if (guild == null || member == null) {
+            return false;
+        }
         VoiceState memberVoiceState = member.getVoiceState().block();
         if (memberVoiceState == null) {
             return false;

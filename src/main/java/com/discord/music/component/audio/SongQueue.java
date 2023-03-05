@@ -53,7 +53,13 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public boolean skipSong() {
+        if (audioPlayer.getPlayingTrack() == null && queue.isEmpty()) {
+            return false;
+        }
         if (queue.isEmpty()) {
+            if (audioPlayer.getPlayingTrack() == null) {
+                return false;
+            }
             audioPlayer.stopTrack();
             return true;
         }
@@ -62,7 +68,7 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
             return true;
         }
         logger.warn("failed to skip to following track: {}. it was not removed from the queue.",
-                queue.getFirst().getIdentifier());
+                audioPlayer.getPlayingTrack().getIdentifier());
         return false;
     }
 
