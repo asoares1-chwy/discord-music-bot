@@ -16,7 +16,7 @@ public class PauseCommand implements CommandHandler<ChatInputInteractionEvent> {
 
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        if (!audioPlayer.isPaused()) {
+        if (!audioPlayer.isPaused() && audioPlayer.getPlayingTrack() != null) {
             audioPlayer.setPaused(true);
             return event
                     .reply("Music Bot is now paused. Resume playing with the /resume command.")
