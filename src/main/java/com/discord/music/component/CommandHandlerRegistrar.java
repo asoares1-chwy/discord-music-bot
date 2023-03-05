@@ -54,7 +54,7 @@ public class CommandHandlerRegistrar {
     public void registerCommandHandlers() {
         logger.info("application startup completed, establishing discord command handlers.");
         client.getEventDispatcher().on(ChatInputInteractionEvent.class, event -> {
-            logger.info("responding to command {}", event.getCommandName());
+            logger.info("responding to command '{}'", event.getCommandName());
             MusicBotCommand command = MusicBotCommand.fromLiteralCommand(event.getCommandName());
             if (command == null) {
                 return Mono.empty();

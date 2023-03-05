@@ -1,6 +1,6 @@
 package com.discord.music.component.handlers;
 
-import com.discord.music.component.SongQueue;
+import com.discord.music.component.audio.SongQueue;
 import com.discord.music.model.queue.ISongQueue;
 import com.discord.music.model.CommandHandler;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;

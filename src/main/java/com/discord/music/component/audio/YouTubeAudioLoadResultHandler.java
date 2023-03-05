@@ -1,5 +1,6 @@
 package com.discord.music.component.audio;
 
+import com.discord.music.model.queue.ISongQueue;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -9,23 +10,25 @@ import discord4j.core.GatewayDiscordClient;
 import org.springframework.stereotype.Component;
 
 @Component
-public class YouTubeAudioResultHandler implements AudioLoadResultHandler {
-    private final AudioPlayer audioPlayer;
+public class YouTubeAudioLoadResultHandler implements AudioLoadResultHandler {
+    private final ISongQueue songQueue;
     private final GatewayDiscordClient discordClient;
 
-    public YouTubeAudioResultHandler(AudioPlayer audioPlayer, GatewayDiscordClient discordClient) {
-        this.audioPlayer = audioPlayer;
+    public YouTubeAudioLoadResultHandler(GatewayDiscordClient discordClient, ISongQueue songQueue) {
+        this.songQueue = songQueue;
         this.discordClient = discordClient;
     }
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        this.audioPlayer.playTrack(track);
+        this.songQueue.addSong(track);
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
-        // TODO load playlists
+        for (AudioTrack track : playlist.getTracks()) {
+            this.songQueue.addSong(track);
+        }
     }
 
     @Override

@@ -55,6 +55,9 @@ public class VoiceChannelService {
      * @return true if the bot is currently joined to any channel, and false otherwise.
      */
     public boolean botInAnyChannel(Guild guild) {
+        if (guild == null) {
+            return false;
+        }
         Snowflake botId = guild.getClient().getSelfId();
         Boolean inChannel = guild
                 .getVoiceStates().any(state -> state.getUserId().equals(botId))
