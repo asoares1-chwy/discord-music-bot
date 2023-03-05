@@ -10,6 +10,7 @@ import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -77,6 +78,11 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
         queue.clear();
         audioPlayer.stopTrack();
         return true;
+    }
+
+    @Override
+    public List<AudioTrack> peekQueueContents() {
+        return this.queue.stream().toList();
     }
 
 }
