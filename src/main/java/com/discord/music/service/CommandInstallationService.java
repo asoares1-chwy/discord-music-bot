@@ -36,9 +36,12 @@ public class CommandInstallationService {
         }
         return Arrays.stream(MusicBotCommand.values())
                 .filter(cmd -> {
+                    if (!sm.contains(cmd.getLiteralCommand())) {
+                        return true;
+                    }
                     logger.info("command '{}' already installed on server. no action will be taken.",
                             cmd.getLiteralCommand());
-                    return sm.contains(cmd.getLiteralCommand());
+                    return false;
                 })
                 .collect(Collectors.toSet());
     }

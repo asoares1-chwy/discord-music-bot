@@ -1,22 +1,16 @@
 package com.discord.music.component.handlers;
 
-import com.discord.music.component.audio.SongQueue;
 import com.discord.music.component.audio.YouTubeAudioLoadResultHandler;
-import com.discord.music.model.MusicBotException;
-import com.discord.music.model.YouTubeURI;
-import com.discord.music.model.queue.ISongQueue;
 import com.discord.music.model.CommandHandler;
+import com.discord.music.model.YouTubeURI;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Guild;
-import discord4j.core.object.entity.Member;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-
-import java.util.Objects;
 
 @Component
 public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {

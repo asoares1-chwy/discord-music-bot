@@ -7,7 +7,7 @@ import discord4j.discordjson.json.ApplicationCommandRequest;
 public enum MusicBotCommand {
     PLAY("play", ApplicationCommandRequest.builder()
             .name("play")
-            .description("Play a song")
+            .description("Adds a song to the queue.")
             .addOption(ApplicationCommandOptionData.builder()
                     .name("song_url")
                     .description("the youtube uri of the song")
@@ -18,23 +18,23 @@ public enum MusicBotCommand {
             .build()),
     PAUSE("pause", ApplicationCommandRequest.builder()
             .name("pause")
-            .description("pause a song")
+            .description("Pauses the Music Bot. No effect if the bot is not playing.")
             .build()),
     RESUME("resume", ApplicationCommandRequest.builder()
             .name("resume")
-            .description("resume a song")
+            .description("Resumes the Music Bot. No effect if the bot is not playing.")
             .build()),
     SKIP("skip", ApplicationCommandRequest.builder()
             .name("skip")
-            .description("skip currently playing song")
+            .description("Skips the currently playing song.")
             .build()),
     CLEAR("clear", ApplicationCommandRequest.builder()
             .name("clear")
-            .description("clear the queue")
+            .description("Clears the contents of the queue. Stops the currently playing song.")
             .build()),
     VIEW_QUEUE("queue", ApplicationCommandRequest.builder()
             .name("queue")
-            .description("view the contents of the queue")
+            .description("See what's playing, and what's coming up next!")
             .build());
 
     private final String literalCommand;

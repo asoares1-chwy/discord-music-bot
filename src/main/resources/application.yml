@@ -5,8 +5,8 @@ discord:
       - music-request
   authentication:
     public:
-      app-id: 1065013184060203088
-      guild-id: 900864366507868233
-      public-key: ad71379a4b7e1d4636e30b3219c697d78928cb49b001e1694012f71968c499f9
+      app-id: ${DISCORD_APPLICATION_ID}
+      guild-id: ${DISCORD_GUILD_ID}
+      public-key: ${DISCORD_PUBLIC_KEY}
     secret:
       discord-token: ${DISCORD_BOT_TOKEN}
