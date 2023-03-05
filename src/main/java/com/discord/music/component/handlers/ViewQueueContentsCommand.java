@@ -27,7 +27,7 @@ public class ViewQueueContentsCommand implements CommandHandler<ChatInputInterac
 
     private String formatViewMessage(AudioTrack current, List<AudioTrack> comingUp) {
         StringBuilder builder = new StringBuilder();
-        builder.append("__**Currently Playing**__ :\uD83C\uDFB5 \n\t")
+        builder.append("__**Currently Playing**__: \uD83C\uDFB5 \n\t")
                 .append(current == null ? "<Nothing>" : current.getInfo().title);
         if (comingUp.isEmpty()) {
             return builder.toString();

@@ -19,7 +19,12 @@ public class ResumeCommand implements CommandHandler<ChatInputInteractionEvent> 
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
         if (audioPlayer.isPaused()) {
             audioPlayer.setPaused(false);
+            return event
+                    .reply("Music Bot has been resumed. Pause again with the /pause command.")
+                    .withEphemeral(true);
         }
-        return event.reply();
+        return event
+                .reply("uWu, the Music Bot is already playing.")
+                .withEphemeral(true);
     }
 }

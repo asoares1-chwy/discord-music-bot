@@ -18,8 +18,10 @@ public class QueueClearCommand implements CommandHandler<ChatInputInteractionEve
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
         if (songQueue.clearQueue()) {
-            return event.reply("Queue has been cleared.");
+            return event.reply("Music Bot queue has been cleared.");
         }
-        return event.reply("Queue is empty, nothing to clear.");
+        return event
+                .reply("Music Bot queue is empty, nothing to clear.")
+                .withEphemeral(true);
     }
 }

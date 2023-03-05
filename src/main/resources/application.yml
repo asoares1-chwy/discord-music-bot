@@ -1,14 +1,12 @@
 discord:
-  base-url: discord.com
-  base-path: api/v10/
+  music-bot:
+    channels:
+      - music
+      - music-request
   authentication:
-    interaction-filter-enabled: true
     public:
       app-id: 1065013184060203088
       guild-id: 900864366507868233
       public-key: ad71379a4b7e1d4636e30b3219c697d78928cb49b001e1694012f71968c499f9
     secret:
       discord-token: ${DISCORD_BOT_TOKEN}
-
-server:
-  port: 8080

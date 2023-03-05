@@ -18,7 +18,10 @@ public class PauseCommand implements CommandHandler<ChatInputInteractionEvent> {
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
         if (!audioPlayer.isPaused()) {
             audioPlayer.setPaused(true);
+            return event
+                    .reply("Music Bot is now paused. Resume playing with the /resume command.")
+                    .withEphemeral(true);
         }
-        return event.reply();
+        return event.reply("uWu, the Music Bot is already paused.");
     }
 }

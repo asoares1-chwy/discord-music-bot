@@ -18,8 +18,11 @@ public class SkipCommand implements CommandHandler<ChatInputInteractionEvent> {
     @Override
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
         if (songQueue.skipSong()) {
-            return event.reply("Skipping currently playing song.");
+            String currentTrack = songQueue.currentlyPlaying().getInfo().title;
+            return event.reply("Skipped <" + currentTrack + ">");
         }
-        return event.reply("Queue is empty, nothing to skip.");
+        return event
+                .reply("No song is playing, and the queue is empty.")
+                .withEphemeral(true);
     }
 }
