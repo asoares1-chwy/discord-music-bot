@@ -26,4 +26,8 @@ Streams any YouTube video to your private Discord server. A simple bot using Lav
 3. Run Spring with the `local` profile to load your specific properties (`--spring.profiles.active=local`)
 
 ### That's it! :) 
-When you launch the application, it will automatically install all commands on your server.
+When you launch the application, it will automatically install all commands on your server. 
+
+
+## Steps to Run on AWS Free Tier
+Coming soon...
