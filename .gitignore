@@ -38,3 +38,6 @@ out/
 
 # Local configuration files
 *-local.yml
+
+*.hcl
+.terraform/
