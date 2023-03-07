@@ -22,6 +22,11 @@ public class ResumeCommand implements CommandHandler<ChatInputInteractionEvent> 
                     .reply("Music Bot has been resumed. Pause again with the /pause command.")
                     .withEphemeral(true);
         }
+        if (audioPlayer.getPlayingTrack() == null) {
+            return event
+                    .reply("uWu, the Music Bot isn't playing anything.")
+                    .withEphemeral(true);
+        }
         return event
                 .reply("uWu, the Music Bot is already playing.")
                 .withEphemeral(true);

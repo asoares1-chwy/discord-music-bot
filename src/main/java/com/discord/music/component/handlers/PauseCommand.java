@@ -22,6 +22,13 @@ public class PauseCommand implements CommandHandler<ChatInputInteractionEvent> {
                     .reply("Music Bot is now paused. Resume playing with the /resume command.")
                     .withEphemeral(true);
         }
-        return event.reply("uWu, the Music Bot is already paused.");
+        if (audioPlayer.getPlayingTrack() == null) {
+            return event
+                    .reply("uWu, the Music Bot isn't playing anything.")
+                    .withEphemeral(true);
+        }
+        return event
+                .reply("uWu, the Music Bot is already paused.")
+                .withEphemeral(true);
     }
 }
