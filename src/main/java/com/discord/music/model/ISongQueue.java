@@ -1,4 +1,4 @@
-package com.discord.music.model.queue;
+package com.discord.music.model;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
