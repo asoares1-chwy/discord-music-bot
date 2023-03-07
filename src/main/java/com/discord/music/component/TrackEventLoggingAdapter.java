@@ -5,7 +5,9 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TrackEventLoggingAdapter extends AudioEventAdapter {
     private final Logger logger;
 
