@@ -9,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +24,13 @@ import java.time.Instant;
 public class ChannelTimeoutEventAdapter extends AudioEventAdapter {
     private final Logger logger;
     private final ISongQueue songQueue;
-    private final ThreadPoolTaskScheduler scheduler;
+    private final TaskScheduler scheduler;
     private final VoiceChannelService voiceChannelService;
     private final int inactivityTimeoutSeconds;
 
     public ChannelTimeoutEventAdapter(Logger logger,
                                       ISongQueue songQueue,
-                                      @Qualifier("ChannelTimeout") ThreadPoolTaskScheduler scheduler,
+                                      @Qualifier("ChannelTimeout") TaskScheduler scheduler,
                                       VoiceChannelService voiceChannelService,
                                       @Value("${discord.music-bot.inactivity-timeout-seconds}") int its) {
         this.logger = logger;
