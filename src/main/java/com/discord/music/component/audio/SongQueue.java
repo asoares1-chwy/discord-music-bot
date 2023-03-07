@@ -57,9 +57,6 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
             return false;
         }
         if (queue.isEmpty()) {
-            if (audioPlayer.getPlayingTrack() == null) {
-                return false;
-            }
             audioPlayer.stopTrack();
             return true;
         }
@@ -74,11 +71,7 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public boolean clearQueue() {
-        if (queue.isEmpty()) {
-            if (audioPlayer.getPlayingTrack() != null) {
-                audioPlayer.stopTrack();
-                return true;
-            }
+        if (!isActiveState()) {
             return false;
         }
         queue.clear();
