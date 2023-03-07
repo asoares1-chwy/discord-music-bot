@@ -39,5 +39,7 @@ out/
 # Local configuration files
 *-local.yml
 
+# Terraform
 *.hcl
 .terraform/
+*.tfstate

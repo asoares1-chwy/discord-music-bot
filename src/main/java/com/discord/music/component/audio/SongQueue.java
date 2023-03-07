@@ -1,7 +1,7 @@
 package com.discord.music.component.audio;
 
 import com.discord.music.model.MusicBotException;
-import com.discord.music.model.queue.ISongQueue;
+import com.discord.music.model.ISongQueue;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -28,6 +28,7 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        logger.info("track {} ({}) has ended.", track.getIdentifier(), track.getInfo().title);
         if (endReason.mayStartNext) {
             this.skipSong();
         }
@@ -53,13 +54,10 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public boolean skipSong() {
-        if (audioPlayer.getPlayingTrack() == null && queue.isEmpty()) {
+        if (!this.isActiveState()) {
             return false;
         }
         if (queue.isEmpty()) {
-            if (audioPlayer.getPlayingTrack() == null) {
-                return false;
-            }
             audioPlayer.stopTrack();
             return true;
         }
@@ -74,11 +72,7 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public boolean clearQueue() {
-        if (queue.isEmpty()) {
-            if (audioPlayer.getPlayingTrack() != null) {
-                audioPlayer.stopTrack();
-                return true;
-            }
+        if (!isActiveState()) {
             return false;
         }
         queue.clear();
@@ -89,6 +83,11 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
     @Override
     public List<AudioTrack> peekQueueContents() {
         return this.queue.stream().toList();
+    }
+
+    @Override
+    public boolean isActiveState() {
+        return this.currentlyPlaying() != null || !this.queue.isEmpty();
     }
 
 }

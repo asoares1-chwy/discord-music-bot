@@ -2,6 +2,7 @@ package com.discord.music.service;
 
 import com.discord.music.config.properties.PublicBotProperties;
 import com.discord.music.model.MusicBotCommand;
+import com.discord.music.model.MusicBotException;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandData;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class CommandInstallationService {
                 .collect(Collectors.toCollection(HashSet::new))
                 .block();
         if (sm == null) {
-            throw new RuntimeException("unable to verify guild commands of guild " + pbp.getGuildId());
+            throw new MusicBotException("unable to verify guild commands of guild " + pbp.getGuildId());
         }
         return Arrays.stream(MusicBotCommand.values())
                 .filter(cmd -> {

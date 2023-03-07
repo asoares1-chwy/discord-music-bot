@@ -1,5 +1,6 @@
 package com.discord.music;
 
+import com.discord.music.component.ChannelTimeoutEventAdapter;
 import com.discord.music.component.CommandHandlerRegistrar;
 import com.discord.music.component.audio.SongQueue;
 import com.discord.music.service.CommandInstallationService;
@@ -12,16 +13,19 @@ import org.springframework.stereotype.Component;
 public class ApplicationStartupInitializer implements ApplicationListener<ApplicationReadyEvent> {
     private final AudioPlayer audioPlayer;
     private final SongQueue songQueue;
+    private final ChannelTimeoutEventAdapter channelTimeoutEventAdapter;
     private final CommandHandlerRegistrar commandHandlerRegistrar;
     private final CommandInstallationService commandInstallationService;
 
     public ApplicationStartupInitializer(AudioPlayer audioPlayer,
                                          SongQueue songQueue,
                                          CommandHandlerRegistrar commandHandlerRegistrar,
+                                         ChannelTimeoutEventAdapter channelTimeoutEventAdapter,
                                          CommandInstallationService commandInstallationService) {
         this.audioPlayer = audioPlayer;
         this.songQueue = songQueue;
         this.commandHandlerRegistrar = commandHandlerRegistrar;
+        this.channelTimeoutEventAdapter = channelTimeoutEventAdapter;
         this.commandInstallationService = commandInstallationService;
     }
 
@@ -30,5 +34,6 @@ public class ApplicationStartupInitializer implements ApplicationListener<Applic
         commandInstallationService.verifyMusicBotCommands();
         commandHandlerRegistrar.registerCommandHandlers();
         this.audioPlayer.addListener(songQueue);
+        this.audioPlayer.addListener(channelTimeoutEventAdapter);
     }
 }

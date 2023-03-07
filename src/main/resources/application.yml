@@ -3,6 +3,7 @@ discord:
     channels:
       - music
       - music-request
+    inactivity-timeout-seconds: 300
   authentication:
     public:
       app-id: ${DISCORD_APPLICATION_ID}

@@ -24,13 +24,13 @@ variable "ec2_instance_type" {
   default     = "t1.micro"
 }
 
-variable "dmb_vpc_id" { }
+variable "vpc_id" {
+  type        = string
+}
 
 variable "ec2_ssh_key_name" {
   type        = string
-  default     = "discord-music-bot-key"
+  default     = "discord-music-bot-ec2-key"
 }
 
-variable "ec2_ssh_public_key_path" {
-  type        = string
-}
+variable "ec2_ssh_public_key_path" { }

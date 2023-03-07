@@ -1,8 +1,7 @@
 package com.discord.music.component.audio;
 
-import com.discord.music.model.queue.ISongQueue;
+import com.discord.music.model.ISongQueue;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;

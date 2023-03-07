@@ -30,16 +30,21 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
         Guild guild = event.getInteraction().getGuild().block();
+
         if (!voiceChannelService.botInAnyChannel(guild)) {
             voiceChannelService.joinVoiceChannel(event.getInteraction().getMember().get());
         }
+
         YouTubeURI youTubeURI;
         try {
             youTubeURI = YouTubeURI.fromUriString(extractSongUri(event));
         } catch (IllegalArgumentException iae) {
             return event.reply("Link is not recognized as a valid YouTube url.");
         }
-        audioPlayerManager.loadItem(youTubeURI.getUri(), youTubeAudioResultHandler);
+
+        audioPlayerManager
+                .loadItem(youTubeURI.getUri(), this.youTubeAudioResultHandler);
+
         return event.reply("Successfully added " + youTubeURI.getUri() + " to the queue.");
     }
 
