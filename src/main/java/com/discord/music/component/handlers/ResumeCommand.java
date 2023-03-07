@@ -1,7 +1,6 @@
 package com.discord.music.component.handlers;
 
 import com.discord.music.model.CommandHandler;
-import com.discord.music.model.queue.ISongQueue;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import org.springframework.stereotype.Component;
