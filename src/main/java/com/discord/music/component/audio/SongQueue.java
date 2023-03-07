@@ -91,4 +91,9 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
         return this.queue.stream().toList();
     }
 
+    @Override
+    public boolean isActiveState() {
+        return this.currentlyPlaying() != null || !this.queue.isEmpty();
+    }
+
 }

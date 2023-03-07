@@ -37,4 +37,12 @@ public interface ISongQueue {
      * @return A List containing an ordered list of songs in the queue.
      */
     List<AudioTrack> peekQueueContents();
+
+    /**
+     * Determines if the bot is currently active. Active status is defined as:<p></p>
+     * 1. A song is currently playing. <p></p>
+     * 2. There are songs remaining in the queue.
+     * @return true if the bot is currently active, and false otherwise.
+     */
+    boolean isActiveState();
 }
