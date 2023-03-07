@@ -1,6 +1,7 @@
 package com.discord.music.component;
 
 import com.discord.music.model.MusicBotException;
+import com.discord.music.model.queue.ISongQueue;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -25,48 +26,46 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ChannelTimeoutEventAdapter extends AudioEventAdapter {
     private final Logger logger;
-    private final int inactivityTimeoutSeconds;
-    private final VoiceChannelService voiceChannelService;
+    private final ISongQueue songQueue;
     private final ThreadPoolTaskScheduler scheduler;
+    private final VoiceChannelService voiceChannelService;
+    private final int inactivityTimeoutSeconds;
 
-    private final static long TRACK_START_TIMEOUT_SECONDS = 30;
+    private final Runnable taskEndedRunnable;
 
     public ChannelTimeoutEventAdapter(Logger logger,
+                                      ISongQueue songQueue,
                                       ThreadPoolTaskScheduler scheduler,
                                       VoiceChannelService voiceChannelService,
                                       @Value("${discord.music-bot.inactivity-timeout-seconds}") int its) {
         this.logger = logger;
         this.scheduler = scheduler;
+        this.songQueue = songQueue;
         this.inactivityTimeoutSeconds = its;
         this.voiceChannelService = voiceChannelService;
+
+        this.taskEndedRunnable = timeoutExecutable();
     }
 
-    @Override
-    public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        BlockingQueue<Runnable> tasks = ((ScheduledThreadPoolExecutor) scheduler.getScheduledExecutor()).getQueue();
-        if (tasks.isEmpty()) {
-            // wait up to TRACK_START_TIMEOUT_SECONDS in case timeout task has not been registered yet.
-            try {
-                ((ScheduledFuture<?>) tasks
-                        .poll(TRACK_START_TIMEOUT_SECONDS, TimeUnit.SECONDS))
-                        .cancel(false);
-            } catch (InterruptedException ie) {
-                throw new MusicBotException("no bot timeout was detected.", ie);
+    private Runnable timeoutExecutable() {
+        return () -> {
+            AudioTrack nowPlaying = this.songQueue.currentlyPlaying();
+            if (nowPlaying != null) {
+                logger.debug("bot is currently playing song {}, timeout cancelled.", nowPlaying.getIdentifier());
+            } else if (!this.songQueue.peekQueueContents().isEmpty()) {
+                logger.debug("bot is not playing but songs are in the queue, timeout cancelled.");
+            } else {
+                logger.info("no audio activity detected in last {} seconds, leaving voice channel.",
+                        inactivityTimeoutSeconds);
+                voiceChannelService.leaveVoiceChannel();
             }
-        } else {
-            tasks.stream()
-                    .map(runnable -> (ScheduledFuture<?>) runnable)
-                    .forEach(future -> future.cancel(false));
-        }
+        };
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        Runnable task = () -> {
-            logger.info("no audio activity detected in last {} seconds, leaving voice channel.",
-                    inactivityTimeoutSeconds);
-            voiceChannelService.leaveVoiceChannel();
-        };
-        scheduler.schedule(task, Instant.now().plusSeconds(inactivityTimeoutSeconds));
+        this.scheduler.schedule(
+                this.taskEndedRunnable,
+                Instant.now().plusSeconds(inactivityTimeoutSeconds));
     }
 }
