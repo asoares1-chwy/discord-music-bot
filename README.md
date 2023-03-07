@@ -30,4 +30,8 @@ When you launch the application, it will automatically install all commands on y
 
 
 ## Steps to Run on AWS Free Tier
-Coming soon...
+
+### Generate SSH Keys for EC2 Connection
+
+1. Use the `ssh-keygen -t rsa -b 2048` command to generate a set of keys. The terraform repository demands this.
+   2. Save key to `/Users/<you>/.ssh/id_rsa_dmb`

@@ -28,15 +28,9 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "public_subnet_id" {
-  type        = string
-}
-
 variable "ec2_ssh_key_name" {
   type        = string
-  default     = "free-tier-ec2-key"
+  default     = "discord-music-bot-ec2-key"
 }
 
-variable "ec2_ssh_public_key_path" {
-  type        = string
-}
+variable "ec2_ssh_public_key_path" { }

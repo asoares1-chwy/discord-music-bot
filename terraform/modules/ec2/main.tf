@@ -3,7 +3,6 @@ resource "aws_instance" "discord_music_bot" {
   ami                         = var.ec2_ami
   instance_type               = var.ec2_instance_type
 
-  subnet_id                   = var.public_subnet_id
   vpc_security_group_ids      = [aws_security_group.ec2_security_group.id]
   associate_public_ip_address = true
   key_name                    = aws_key_pair.ec2_key_pair.key_name
@@ -20,9 +19,9 @@ resource "aws_security_group" "ec2_security_group" {
   vpc_id      = var.vpc_id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port   = 50000
+    to_port     = 65535
+    protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -52,6 +51,7 @@ resource "aws_security_group" "ec2_security_group" {
   }
 }
 
+// This must be created manually first, per Terraform documentation
 resource "aws_key_pair" "ec2_key_pair" {
   key_name   = var.ec2_ssh_key_name
   public_key = file(var.ec2_ssh_public_key_path)

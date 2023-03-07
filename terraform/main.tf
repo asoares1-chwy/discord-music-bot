@@ -1,17 +1,18 @@
 provider "aws" {
-  profile = "development-local"
-  region = "us-east-1"
+  region = var.region
+  profile = var.profile
 }
 
-terraform {
-  backend "s3" {}
-}
+#terraform {
+#  backend "s3" {}
+#}
 
 module "vpc" {
   source = "./modules/vpc"
 }
 
 module "ec2" {
-  source = "./modules/vpc"
+  source = "./modules/ec2"
+  ec2_ssh_public_key_path = var.ec2_ssh_public_key_path
   vpc_id = module.vpc.vpc_id
 }
