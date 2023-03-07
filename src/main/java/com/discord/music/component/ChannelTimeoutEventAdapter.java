@@ -1,6 +1,5 @@
 package com.discord.music.component;
 
-import com.discord.music.model.MusicBotException;
 import com.discord.music.model.queue.ISongQueue;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
@@ -13,10 +12,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Class responsible for timing out the bot after a period of inactivity.
