@@ -9,6 +9,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Guild;
+import discord4j.core.object.entity.Member;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -32,7 +33,12 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
         Guild guild = event.getInteraction().getGuild().block();
 
         if (!voiceChannelService.botInAnyChannel(guild)) {
-            voiceChannelService.joinVoiceChannel(event.getInteraction().getMember().get());
+            Member member = event.getInteraction().getMember().get();
+            if (!voiceChannelService.userInVoiceChannel(member)) {
+                return event.reply("Bot is not connected, and you are not in a voice channel. " +
+                        "Please join a channel before queueing songs.").withEphemeral(true);
+            }
+            voiceChannelService.joinVoiceChannel(member);
         }
 
         YouTubeURI youTubeURI;

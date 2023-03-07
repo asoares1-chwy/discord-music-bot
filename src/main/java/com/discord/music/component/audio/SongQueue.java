@@ -28,7 +28,6 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        logger.info("track {} ({}) has ended.", track.getIdentifier(), track.getInfo().title);
         if (endReason.mayStartNext) {
             this.skipSong();
         }

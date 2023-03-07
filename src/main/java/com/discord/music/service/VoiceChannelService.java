@@ -32,6 +32,15 @@ public class VoiceChannelService {
         this.discordClient = discordClient;
     }
 
+    public boolean userInVoiceChannel(Member member) {
+        VoiceState memberVoiceState = member.getVoiceState().block();
+        if (memberVoiceState == null) {
+            return false;
+        }
+        VoiceChannel userChannel = memberVoiceState.getChannel().block();
+        return userChannel != null;
+    }
+
     /**
      * Determines if the bot is currently in the user's channel.
      *
