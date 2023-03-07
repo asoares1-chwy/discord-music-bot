@@ -9,8 +9,6 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.channel.VoiceChannel;
 import discord4j.core.spec.VoiceChannelJoinSpec;
-import discord4j.discordjson.json.UserData;
-import discord4j.rest.entity.RestGuild;
 import discord4j.voice.VoiceConnection;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -106,7 +104,7 @@ public class VoiceChannelService {
     /**
      * Commands the bot to leave a channel, and discard the voice connection.
      */
-    public void leaveChannel() {
+    public void leaveVoiceChannel() {
         VoiceConnection voiceConnection = this.discordClient
                 .getVoiceConnectionRegistry()
                 .getVoiceConnection(Snowflake.of(pbp.getGuildId()))

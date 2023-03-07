@@ -29,7 +29,7 @@ public class ChannelTimeoutEventAdapter extends AudioEventAdapter {
         this.logger = logger;
         this.scheduler = scheduler;
         this.inactivityTimeoutSeconds = its;
-        this.trackEndRunnable = voiceChannelService::leaveChannel;
+        this.trackEndRunnable = voiceChannelService::leaveVoiceChannel;
     }
 
     @Override
