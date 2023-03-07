@@ -53,7 +53,7 @@ public class SongQueue extends AudioEventAdapter implements ISongQueue {
 
     @Override
     public boolean skipSong() {
-        if (audioPlayer.getPlayingTrack() == null && queue.isEmpty()) {
+        if (!this.isActiveState()) {
             return false;
         }
         if (queue.isEmpty()) {
