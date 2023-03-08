@@ -2,7 +2,7 @@ package com.discord.music.component.handlers;
 
 import com.discord.music.component.audio.YouTubeAudioLoadResultHandler;
 import com.discord.music.model.CommandHandler;
-import com.discord.music.model.YouTubeURI;
+import com.discord.music.model.Validator;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -12,6 +12,9 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @Component
 public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
@@ -30,6 +33,12 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
     @Override
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
+        Optional<String> validatedURI = extractSongUri(event);
+
+        if (validatedURI.isEmpty()) {
+            return event.reply("Link is not recognized as a YouTube or SoundCloud URL.");
+        }
+        
         Guild guild = event.getInteraction().getGuild().block();
 
         if (!voiceChannelService.botInAnyChannel(guild)) {
@@ -41,25 +50,25 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
             voiceChannelService.joinVoiceChannel(member);
         }
 
-        YouTubeURI youTubeURI;
-        try {
-            youTubeURI = YouTubeURI.fromUriString(extractSongUri(event));
-        } catch (IllegalArgumentException iae) {
-            return event.reply("Link is not recognized as a valid YouTube url.");
-        }
-
         audioPlayerManager
-                .loadItem(youTubeURI.getUri(), this.youTubeAudioResultHandler);
+                .loadItem(validatedURI.get(), this.youTubeAudioResultHandler);
 
-        return event.reply("Successfully added " + youTubeURI.getUri() + " to the queue.");
+        return event.reply("Successfully added " + validatedURI.get() + " to the queue.");
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    private static String extractSongUri(ChatInputInteractionEvent event) {
-        return event.getOption("song_url")
+    private static Optional<String> extractSongUri(ChatInputInteractionEvent event) {
+        String rawURI = event.getOption("song_url")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .get();
+        for (Validator validator : Validator.values()) {
+            Optional<String> validatedURI = validator.getValidUri(rawURI);
+            if (validatedURI.isPresent()) {
+                return validatedURI;
+            }
+        }
+        return Optional.empty();
     }
 
 }
