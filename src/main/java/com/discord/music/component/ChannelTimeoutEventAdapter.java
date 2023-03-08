@@ -1,6 +1,5 @@
 package com.discord.music.component;
 
-import com.discord.music.model.ISongQueue;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -12,7 +11,6 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.temporal.TemporalUnit;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -24,19 +22,16 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 public class ChannelTimeoutEventAdapter extends AudioEventAdapter {
     private final Logger logger;
-    private final ISongQueue songQueue;
     private final TaskScheduler scheduler;
     private final VoiceChannelService voiceChannelService;
     private final int inactivityTimeoutSeconds;
 
     public ChannelTimeoutEventAdapter(Logger logger,
-                                      ISongQueue songQueue,
                                       @Qualifier("ChannelTimeout") TaskScheduler scheduler,
                                       VoiceChannelService voiceChannelService,
                                       @Value("${discord.music-bot.inactivity-timeout-seconds}") int its) {
         this.logger = logger;
         this.scheduler = scheduler;
-        this.songQueue = songQueue;
         this.inactivityTimeoutSeconds = its;
         this.voiceChannelService = voiceChannelService;
     }
