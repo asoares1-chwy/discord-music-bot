@@ -37,6 +37,7 @@ public class ApplicationStartupInitializer implements ApplicationListener<Applic
     public void onApplicationEvent(ApplicationReadyEvent event) {
         commandInstallationService.verifyMusicBotCommands();
         commandHandlerRegistrar.registerCommandHandlers();
+        this.audioPlayer.addListener(loggingAdapter);
         this.audioPlayer.addListener(songQueue);
         this.audioPlayer.addListener(channelTimeoutEventAdapter);
     }

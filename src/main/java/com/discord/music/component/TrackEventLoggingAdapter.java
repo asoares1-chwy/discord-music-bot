@@ -17,7 +17,7 @@ public class TrackEventLoggingAdapter extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        logger.info("track {} ({}) has begun", track.getIdentifier(), track.getInfo().title);
+        logger.info("track {} ({}) has begun.", track.getIdentifier(), track.getInfo().title);
     }
 
     @Override
