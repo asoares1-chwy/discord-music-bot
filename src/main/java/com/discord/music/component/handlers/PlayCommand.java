@@ -13,7 +13,6 @@ import discord4j.core.object.entity.Member;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Component
@@ -38,7 +37,7 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
         if (validatedURI.isEmpty()) {
             return event.reply("Link is not recognized as a YouTube or SoundCloud URL.");
         }
-        
+
         Guild guild = event.getInteraction().getGuild().block();
 
         if (!voiceChannelService.botInAnyChannel(guild)) {
