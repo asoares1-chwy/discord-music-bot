@@ -39,7 +39,7 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
     /* Application Specific Libraries */
-    implementation group: 'com.discord4j', name: 'discord4j-core', version: '3.2.3'
+    implementation group: 'com.discord4j', name: 'discord4j-core', version: '3.2.4'
     implementation group: 'com.sedmelluq', name: 'lavaplayer', version: '1.3.77'
 
     /* Mac Users with the M1 chip may experience networking issues with LavaPlayer.
