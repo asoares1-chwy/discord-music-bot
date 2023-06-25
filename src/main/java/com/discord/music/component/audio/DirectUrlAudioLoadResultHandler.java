@@ -9,11 +9,11 @@ import discord4j.core.GatewayDiscordClient;
 import org.springframework.stereotype.Component;
 
 @Component
-public class YouTubeAudioLoadResultHandler implements AudioLoadResultHandler {
+public class DirectUrlAudioLoadResultHandler implements AudioLoadResultHandler {
     private final ISongQueue songQueue;
     private final GatewayDiscordClient discordClient;
 
-    public YouTubeAudioLoadResultHandler(GatewayDiscordClient discordClient, ISongQueue songQueue) {
+    public DirectUrlAudioLoadResultHandler(GatewayDiscordClient discordClient, ISongQueue songQueue) {
         this.songQueue = songQueue;
         this.discordClient = discordClient;
     }
