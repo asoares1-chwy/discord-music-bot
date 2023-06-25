@@ -3,7 +3,6 @@ package com.discord.music.component.handlers;
 import com.discord.music.component.audio.AudioSearchLoadResultHandler;
 import com.discord.music.component.audio.DirectUrlAudioLoadResultHandler;
 import com.discord.music.model.CommandHandler;
-import com.discord.music.model.ISongQueue;
 import com.discord.music.model.InputValidationTools;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -18,23 +17,18 @@ import reactor.core.publisher.Mono;
 @Component
 public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
     private final AudioPlayerManager audioPlayerManager;
-    private final ISongQueue songQueue;
     private final VoiceChannelService voiceChannelService;
     private final DirectUrlAudioLoadResultHandler directUrlAudioLoadResultHandler;
     private final AudioSearchLoadResultHandler audioSearchLoadResultHandler;
 
-    private final static String YT_SEARCH_PREFIX = "ytsearch:";
-
     public PlayCommand(AudioPlayerManager audioPlayerManager,
                        VoiceChannelService voiceChannelService,
-                       ISongQueue queue,
                        AudioSearchLoadResultHandler audioSearchLoadResultHandler,
                        DirectUrlAudioLoadResultHandler directUrlAudioLoadResultHandler) {
         this.audioPlayerManager = audioPlayerManager;
         this.voiceChannelService = voiceChannelService;
         this.audioSearchLoadResultHandler = audioSearchLoadResultHandler;
         this.directUrlAudioLoadResultHandler = directUrlAudioLoadResultHandler;
-        this.songQueue = queue;
     }
 
     @Override
@@ -70,6 +64,5 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .get();
     }
-
 
 }
