@@ -40,8 +40,10 @@ public class ChannelTimeoutEventAdapter extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
-        // This is not a perfect calculation. Delays in loading the track may cause this trigger to fire early.
-        // In practice, this is acceptable margin of error and the bot will leave within ±1 second of expected Instant.
+        /*
+         This is not a perfect calculation. Delays in loading the track may cause this trigger to fire early.
+         In practice, this is an acceptable margin of error and the bot will leave within ±1 second of expected Instant.
+         */
         Instant trackEndTime = Instant.now()
                 .plusSeconds(inactivityTimeoutSeconds)
                 .plusMillis(track.getDuration());

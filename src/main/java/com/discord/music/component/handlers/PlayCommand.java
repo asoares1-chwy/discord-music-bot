@@ -1,8 +1,8 @@
 package com.discord.music.component.handlers;
 
-import com.discord.music.component.audio.YouTubeAudioLoadResultHandler;
+import com.discord.music.component.audio.AudioSearchLoadResultHandler;
+import com.discord.music.component.audio.DirectUrlAudioLoadResultHandler;
 import com.discord.music.model.CommandHandler;
-import com.discord.music.model.Validator;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -13,31 +13,28 @@ import discord4j.core.object.entity.Member;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+import static com.discord.music.model.InputValidationTools.*;
 
 @Component
 public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
     private final AudioPlayerManager audioPlayerManager;
     private final VoiceChannelService voiceChannelService;
-    private final YouTubeAudioLoadResultHandler youTubeAudioResultHandler;
+    private final DirectUrlAudioLoadResultHandler directUrlAudioLoadResultHandler;
+    private final AudioSearchLoadResultHandler audioSearchLoadResultHandler;
 
     public PlayCommand(AudioPlayerManager audioPlayerManager,
                        VoiceChannelService voiceChannelService,
-                       YouTubeAudioLoadResultHandler youTubeAudioResultHandler) {
+                       AudioSearchLoadResultHandler audioSearchLoadResultHandler,
+                       DirectUrlAudioLoadResultHandler directUrlAudioLoadResultHandler) {
         this.audioPlayerManager = audioPlayerManager;
         this.voiceChannelService = voiceChannelService;
-        this.youTubeAudioResultHandler = youTubeAudioResultHandler;
+        this.audioSearchLoadResultHandler = audioSearchLoadResultHandler;
+        this.directUrlAudioLoadResultHandler = directUrlAudioLoadResultHandler;
     }
 
     @Override
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public Mono<Void> executeOnCommand(ChatInputInteractionEvent event) {
-        Optional<String> validatedURI = extractSongUri(event);
-
-        if (validatedURI.isEmpty()) {
-            return event.reply("Link is not recognized as a YouTube or SoundCloud URL.");
-        }
-
         Guild guild = event.getInteraction().getGuild().block();
 
         if (!voiceChannelService.botInAnyChannel(guild)) {
@@ -49,25 +46,23 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
             voiceChannelService.joinVoiceChannel(member);
         }
 
-        audioPlayerManager
-                .loadItem(validatedURI.get(), this.youTubeAudioResultHandler);
+        String requestTerm = extractRequestParameter(event);
 
-        return event.reply("Successfully added " + validatedURI.get() + " to the queue.");
+        if (isValidYouTubeUrl(requestTerm) || isValidSoundcloudUrl(requestTerm)) {
+            audioPlayerManager.loadItem(requestTerm, this.directUrlAudioLoadResultHandler);
+            return event.reply("Successfully added " + requestTerm + " to the queue.");
+        }
+
+        audioPlayerManager.loadItem(prependYouTubePrefix(requestTerm), this.audioSearchLoadResultHandler);
+        return event.reply("Searching for '" + requestTerm + "' on YouTube.").withEphemeral(true);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    private static Optional<String> extractSongUri(ChatInputInteractionEvent event) {
-        String rawURI = event.getOption("song_url")
+    private static String extractRequestParameter(ChatInputInteractionEvent event) {
+        return event.getOption("search_term")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .get();
-        for (Validator validator : Validator.values()) {
-            Optional<String> validatedURI = validator.getValidUri(rawURI);
-            if (validatedURI.isPresent()) {
-                return validatedURI;
-            }
-        }
-        return Optional.empty();
     }
 
 }
