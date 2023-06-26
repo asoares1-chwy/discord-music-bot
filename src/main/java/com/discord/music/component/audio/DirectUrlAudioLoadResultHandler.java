@@ -1,6 +1,7 @@
 package com.discord.music.component.audio;
 
 import com.discord.music.model.ISongQueue;
+import com.discord.music.service.TextChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -11,11 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class DirectUrlAudioLoadResultHandler implements AudioLoadResultHandler {
     private final ISongQueue songQueue;
-    private final GatewayDiscordClient discordClient;
+    private final TextChannelService textChannelService;
 
-    public DirectUrlAudioLoadResultHandler(GatewayDiscordClient discordClient, ISongQueue songQueue) {
+    public DirectUrlAudioLoadResultHandler(ISongQueue songQueue, TextChannelService textChannelService) {
         this.songQueue = songQueue;
-        this.discordClient = discordClient;
+        this.textChannelService = textChannelService;
     }
 
     @Override
@@ -32,11 +33,13 @@ public class DirectUrlAudioLoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void noMatches() {
-        // TODO inform client of missing tracks
+        textChannelService.writeMessageToRequestChannel(
+                "The request was a valid YouTube or Soundcloud link, but did not resolve to any content.");
     }
 
     @Override
     public void loadFailed(FriendlyException exception) {
-        // TODO inform client of track load failure
+        textChannelService.writeMessageToRequestChannel("Oh no! We couldn't load your track request. Why? "
+                + exception.getMessage());
     }
 }

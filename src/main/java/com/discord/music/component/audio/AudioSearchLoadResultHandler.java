@@ -38,12 +38,14 @@ public class AudioSearchLoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void noMatches() {
-
+        textChannelService.writeMessageToRequestChannel(
+                "Congratulations, you managed to search for something that returned 0 YouTube results.");
     }
 
     @Override
     public void loadFailed(FriendlyException exception) {
-
+        textChannelService.writeMessageToRequestChannel("Oh no! We couldn't load your track request. Why? "
+                + exception.getMessage());
     }
 
     private void respondToLoadEvent(AudioTrack audioTrack) {

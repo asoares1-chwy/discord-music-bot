@@ -59,7 +59,7 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     private static String extractRequestParameter(ChatInputInteractionEvent event) {
-        return event.getOption("song_url")
+        return event.getOption("search_term")
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(ApplicationCommandInteractionOptionValue::asString)
                 .get();
