@@ -1,11 +1,9 @@
 discord:
   music-bot:
-    channels:
-      - music
-      - music-request
     inactivity-timeout-seconds: 300
   authentication:
     public:
+      request-channel-id: ${DISCORD_REQUEST_CHANNEL_ID}
       app-id: ${DISCORD_APPLICATION_ID}
       guild-id: ${DISCORD_GUILD_ID}
       public-key: ${DISCORD_PUBLIC_KEY}

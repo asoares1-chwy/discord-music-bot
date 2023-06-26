@@ -3,7 +3,6 @@ package com.discord.music.component.handlers;
 import com.discord.music.component.audio.AudioSearchLoadResultHandler;
 import com.discord.music.component.audio.DirectUrlAudioLoadResultHandler;
 import com.discord.music.model.CommandHandler;
-import com.discord.music.model.InputValidationTools;
 import com.discord.music.service.VoiceChannelService;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -13,6 +12,8 @@ import discord4j.core.object.entity.Guild;
 import discord4j.core.object.entity.Member;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import static com.discord.music.model.InputValidationTools.*;
 
 @Component
 public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
@@ -47,14 +48,13 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
 
         String requestTerm = extractRequestParameter(event);
 
-        if (InputValidationTools.isValidYouTubeUrl(requestTerm) || InputValidationTools.isValidSoundcloudUrl(requestTerm)) {
+        if (isValidYouTubeUrl(requestTerm) || isValidSoundcloudUrl(requestTerm)) {
             audioPlayerManager.loadItem(requestTerm, this.directUrlAudioLoadResultHandler);
-        } else {
-            audioPlayerManager.loadItem(
-                    InputValidationTools.prependYouTubePrefix(requestTerm), this.audioSearchLoadResultHandler);
+            return event.reply("Successfully added " + requestTerm + " to the queue.");
         }
 
-        return event.reply("Successfully added " + requestTerm + " to the queue.");
+        audioPlayerManager.loadItem(prependYouTubePrefix(requestTerm), this.audioSearchLoadResultHandler);
+        return event.reply("Searching for '" + requestTerm + "' on YouTube.").withEphemeral(true);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")

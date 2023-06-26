@@ -29,7 +29,16 @@ public class PublicBotProperties {
         this.publicKey = publicKey;
     }
 
+    public Long getRequestChannelId() {
+        return requestChannelId;
+    }
+
+    public void setRequestChannelId(Long requestChannelId) {
+        this.requestChannelId = requestChannelId;
+    }
+
     private Long appId;
     private Long guildId;
     private String publicKey;
+    private Long requestChannelId;
 }
