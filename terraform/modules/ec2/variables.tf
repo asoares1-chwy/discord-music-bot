@@ -1,16 +1,16 @@
 variable "ec2_name" {
-  type        = string
-  default     = "discord-music-bot"
+  type    = string
+  default = "discord-music-bot"
 }
 
 variable "ec2_security_group_name" {
-  type        = string
-  default     = "discord-music-bot-sg"
+  type    = string
+  default = "discord-music-bot-sg"
 }
 
 variable "ec2_security_group_description" {
-  type        = string
-  default     = "security group for discord music bot"
+  type    = string
+  default = "security group for discord music bot"
 }
 
 variable "ec2_ami" {
@@ -20,17 +20,20 @@ variable "ec2_ami" {
 }
 
 variable "ec2_instance_type" {
-  type        = string
-  default     = "t1.micro"
+  type    = string
+  default = "t1.micro"
 }
 
 variable "vpc_id" {
-  type        = string
+  type = string
 }
 
 variable "ec2_ssh_key_name" {
-  type        = string
-  default     = "discord-music-bot-ec2-key"
+  type    = string
+  default = "discord-music-bot-ec2-key"
 }
 
-variable "ec2_ssh_public_key_path" { }
+variable "public_subnet_id" {
+  description = "The ID of the Public Subnet"
+  type        = string
+}
