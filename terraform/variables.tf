@@ -7,7 +7,7 @@ variable "ec2_ssh_public_key_path" {
 variable "profile" {
   description = "AWS Profile"
   type        = string
-  default     = "adriano-personal"
+  default     = "adriano-local"
 }
 
 variable "region" {

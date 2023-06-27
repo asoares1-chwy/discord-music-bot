@@ -43,3 +43,4 @@ out/
 *.hcl
 .terraform/
 *.tfstate
+*.tfstate.backup
