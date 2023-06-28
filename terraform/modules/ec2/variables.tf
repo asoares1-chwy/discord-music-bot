@@ -21,7 +21,7 @@ variable "ec2_ami" {
 
 variable "ec2_instance_type" {
   type    = string
-  default = "t1.micro"
+  default = "t3a.nano"
 }
 
 variable "vpc_id" {
