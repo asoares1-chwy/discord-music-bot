@@ -1,12 +1,7 @@
 package com.discord.music.component;
 
+import com.discord.music.component.handlers.*;
 import com.discord.music.model.CommandHandler;
-import com.discord.music.component.handlers.PauseCommand;
-import com.discord.music.component.handlers.PlayCommand;
-import com.discord.music.component.handlers.QueueClearCommand;
-import com.discord.music.component.handlers.ResumeCommand;
-import com.discord.music.component.handlers.SkipCommand;
-import com.discord.music.component.handlers.ViewQueueContentsCommand;
 import com.discord.music.model.MusicBotCommand;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -24,6 +19,7 @@ public class CommandHandlerRegistrar {
     private final SkipCommand skipCommand;
     private final PauseCommand pauseCommand;
     private final ResumeCommand resumeCommand;
+    private final LeaveCommand leaveCommand;
     private final ViewQueueContentsCommand viewQueueContentsCommand;
     private final QueueClearCommand queueClearCommand;
 
@@ -34,6 +30,7 @@ public class CommandHandlerRegistrar {
                                    PauseCommand pauseCommand,
                                    ResumeCommand resumeCommand,
                                    QueueClearCommand queueClearCommand,
+                                   LeaveCommand leaveCommand,
                                    ViewQueueContentsCommand viewQueueContentsCommand) {
         this.client = client;
         this.logger = logger;
@@ -42,6 +39,7 @@ public class CommandHandlerRegistrar {
         this.queueClearCommand = queueClearCommand;
         this.pauseCommand = pauseCommand;
         this.resumeCommand = resumeCommand;
+        this.leaveCommand = leaveCommand;
         this.viewQueueContentsCommand = viewQueueContentsCommand;
     }
 
@@ -64,6 +62,7 @@ public class CommandHandlerRegistrar {
                 case PAUSE -> pauseCommand;
                 case RESUME -> resumeCommand;
                 case VIEW_QUEUE -> viewQueueContentsCommand;
+                case LEAVE -> leaveCommand;
             };
             return cmd.executeOnCommand(event);
         }).subscribe();
