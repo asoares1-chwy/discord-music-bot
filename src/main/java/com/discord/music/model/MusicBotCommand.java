@@ -35,6 +35,10 @@ public enum MusicBotCommand {
     VIEW_QUEUE("queue", ApplicationCommandRequest.builder()
             .name("queue")
             .description("See what's playing, and what's coming up next!")
+            .build()),
+    LEAVE("leave", ApplicationCommandRequest.builder()
+            .name("leave")
+            .description("Politely ask the bot to leave the channel.")
             .build());
 
     private final String literalCommand;
