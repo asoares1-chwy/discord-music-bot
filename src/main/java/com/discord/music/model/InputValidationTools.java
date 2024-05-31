@@ -25,6 +25,7 @@ public final class InputValidationTools {
 
     /**
      * Converts a string into a search term recognized by LavaPlayer, specifically for YouTube.
+     *
      * @param searchTerm The string to convert to a search term.
      * @return A string representing a LavaPlayer search term.
      */
@@ -34,6 +35,7 @@ public final class InputValidationTools {
 
     /**
      * Converts a string into a search term recognized by LavaPlayer, specifically for Soundcloud.
+     *
      * @param searchTerm The string to convert to a search term.
      * @return A string representing a LavaPlayer search term.
      */
@@ -43,6 +45,7 @@ public final class InputValidationTools {
 
     /**
      * Determines whether the given string is a valid YouTube video URL.
+     *
      * @param url The alleged YouTube URL to validate.
      * @return True if the string is a valid YouTube URI, and false otherwise.
      */
@@ -60,6 +63,7 @@ public final class InputValidationTools {
 
     /**
      * Determines whether the given string is a valid Soundcloud audio URL.
+     *
      * @param url The alleged Soundcloud URL to validate.
      * @return True if the string is a valid Soundcloud URI, and false otherwise.
      */

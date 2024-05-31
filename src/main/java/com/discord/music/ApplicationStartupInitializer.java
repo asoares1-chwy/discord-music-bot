@@ -1,4 +1,5 @@
 package com.discord.music;
+
 import com.discord.music.component.ChannelTimeoutEventAdapter;
 import com.discord.music.component.CommandHandlerRegistrar;
 import com.discord.music.component.TrackEventLoggingAdapter;
