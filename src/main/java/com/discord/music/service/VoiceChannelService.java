@@ -44,7 +44,7 @@ public class VoiceChannelService {
     /**
      * Determines if the bot is currently in the user's channel.
      *
-     * @param guild The Guild to scan.
+     * @param guild  The Guild to scan.
      * @param member The member whose VoiceChannel to scan.
      * @return true if the bot is currently joined to the member's channel, and false otherwise.
      */
