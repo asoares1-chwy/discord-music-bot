@@ -1,5 +1,6 @@
 package com.discord.music.model;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -15,6 +16,8 @@ public final class InputValidationTools {
 
     private static final Pattern SC_REGEX = Pattern.compile(
             "^(?:(https?)://)?(?:(?:www|m)\\.)?(soundcloud\\.com|snd\\.sc)/(.*)$", Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern YT_VIDEO_ID_REGEX = Pattern.compile("(?<=[?&]v=)([a-zA-Z0-9_-]+)");
 
     private static final String YT_SEARCH_PREFIX = "ytsearch:";
 
@@ -45,6 +48,14 @@ public final class InputValidationTools {
      */
     public static boolean isValidYouTubeUrl(String url) {
         return YT_REGEX.matcher(url).find();
+    }
+
+    public static String extractVideoId(String url) {
+        Matcher m = YT_VIDEO_ID_REGEX.matcher(url);
+        if (m.find()) {
+            return m.group();
+        }
+        throw new MusicBotException("expected valid youtube uri, could not find query parameter 'v'");
     }
 
     /**

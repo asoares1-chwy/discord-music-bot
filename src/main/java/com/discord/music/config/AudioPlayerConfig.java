@@ -21,7 +21,7 @@ public class AudioPlayerConfig {
         // exclude deprecated YouTubeAudioSourceManager, and include the rewritten library.
         AudioSourceManagers.registerRemoteSources(playerManager,
                 com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
-        AudioSourceManager ytSourceManager = new YoutubeAudioSourceManager(true);
+        AudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
         playerManager.registerSourceManager(ytSourceManager);
         return playerManager;
     }
