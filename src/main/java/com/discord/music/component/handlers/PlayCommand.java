@@ -48,8 +48,14 @@ public class PlayCommand implements CommandHandler<ChatInputInteractionEvent> {
 
         String requestTerm = extractRequestParameter(event);
 
-        if (isValidYouTubeUrl(requestTerm) || isValidSoundcloudUrl(requestTerm)) {
-            audioPlayerManager.loadItem(extractVideoId(requestTerm), this.directUrlAudioLoadResultHandler);
+        if (isValidYouTubeUrl(requestTerm)) {
+            String videoId = extractVideoId(requestTerm);
+            audioPlayerManager.loadItem(videoId, this.directUrlAudioLoadResultHandler);
+            return event.reply("Successfully added " + requestTerm + " to the queue.");
+        }
+
+        if (isValidSoundcloudUrl(requestTerm)) {
+            audioPlayerManager.loadItem(requestTerm, this.directUrlAudioLoadResultHandler);
             return event.reply("Successfully added " + requestTerm + " to the queue.");
         }
 
