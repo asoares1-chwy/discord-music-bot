@@ -9,3 +9,4 @@ discord:
       public-key: ${DISCORD_PUBLIC_KEY}
     secret:
       discord-token: ${DISCORD_BOT_TOKEN}
+      oauth-2-token: ${OAUTH_2_TOKEN}

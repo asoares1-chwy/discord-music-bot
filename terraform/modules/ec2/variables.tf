@@ -14,9 +14,9 @@ variable "ec2_security_group_description" {
 }
 
 variable "ec2_ami" {
-  description = "Amazon Linux 2 Kernel 5.10 AMI 2.0.20230221.0 x86_64 HVM gp2"
+  description = "Amazon Linux 2023 AMI 2023.5.20240916.0 x86_64 HVM kernel-6.1"
   type        = string
-  default     = "ami-006dcf34c09e50022"
+  default     = "ami-0ebfd941bbafe70c6"
 }
 
 variable "ec2_instance_type" {
