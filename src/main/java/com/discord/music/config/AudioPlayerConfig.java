@@ -3,17 +3,18 @@ package com.discord.music.config;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
+import jakarta.annotation.Nullable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AudioPlayerConfig {
     @Bean
-    AudioPlayerManager getAudioPlayerManager() {
+    AudioPlayerManager getAudioPlayerManager(@Nullable @Value("${discord.authentication.secret.oauth-2-token}") String oAuthToken) {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
         playerManager
                 .getConfiguration()
@@ -21,7 +22,8 @@ public class AudioPlayerConfig {
         // exclude deprecated YouTubeAudioSourceManager, and include the rewritten library.
         AudioSourceManagers.registerRemoteSources(playerManager,
                 com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager.class);
-        AudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
+        YoutubeAudioSourceManager ytSourceManager = new YoutubeAudioSourceManager();
+        ytSourceManager.useOauth2(oAuthToken, false);
         playerManager.registerSourceManager(ytSourceManager);
         return playerManager;
     }
